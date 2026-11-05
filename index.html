@@ -2963,8 +2963,10 @@ function start() {
     });
     if (!subscribed) { mpClose(); return 'Não foi possível conectar. Verifique a internet.'; }
     await ch.track({ name: mp.name });
-    await new Promise(r => setTimeout(r, 1200));           // espera a lista de jogadores da sala chegar
-    const others = Object.keys(ch.presenceState()).filter(i => i !== mp.id).length;
+    const cnt = () => Object.keys(ch.presenceState()).filter(i => i !== mp.id).length;
+    // espera a lista de jogadores chegar: ao entrar, até 6 s (conexão de celular é lenta); ao criar, 1,5 s
+    for (let w = 0, max = mode === 'join' ? 6000 : 1500; w < max && !(mode === 'join' && cnt() > 0); w += 200) await new Promise(r => setTimeout(r, 200));
+    const others = cnt();
     if (mode === 'join' && others === 0) { mpClose(); return 'Sala não encontrada.'; }
     if (mode === 'join' && others >= MP_MAX) { mpClose(); return 'Sala cheia (máx. ' + MP_MAX + ').'; }
     if (mode === 'create' && others > 0) { mpClose(); return 'retry'; }
