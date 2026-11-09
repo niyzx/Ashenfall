@@ -85,12 +85,33 @@ body{touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-c
 .row2{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
 input[type=text]{box-sizing:border-box;padding:9px 11px;border:1px solid rgba(255,225,190,.4);background:rgba(10,7,5,.7);color:#f1e6d6;font:600 14px Georgia,serif;outline:none;user-select:text;-webkit-user-select:text;min-width:0}
 input[type=text]:focus{border-color:#e8893a}
+input[type=password]{box-sizing:border-box;width:100%;padding:9px 11px;border:1px solid rgba(255,225,190,.4);background:rgba(10,7,5,.7);color:#f1e6d6;font:600 14px Georgia,serif;outline:none;min-width:0}
+input[type=password]:focus{border-color:#e8893a}
+#acName{width:100%}
+#acMsg{min-height:18px;margin-top:10px;text-align:center;font-size:13px;color:#ffd9b0}
+#acMsg.err{color:#ff8a70}
 .seg{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
 .seg.l{justify-content:flex-start}
 .seg button,.chips button{padding:7px 11px;border:1px solid rgba(255,225,190,.35);border-radius:2px;background:rgba(20,14,10,.55);color:#f1e6d6;font:600 12px Georgia,serif;cursor:pointer}
 .seg button.on,.chips button.on{border-color:#e8893a;background:rgba(232,137,58,.35);color:#fff}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
-#prevCv{display:block;width:100%;height:250px;margin:0 auto;background:radial-gradient(ellipse at 50% 60%,rgba(232,137,58,.18),rgba(0,0,0,.25) 70%);border:1px solid rgba(255,225,190,.18);touch-action:none;cursor:grab}
+#prevCv{display:block;width:100%;height:min(240px,31vh);margin:0 auto;background:radial-gradient(ellipse at 50% 60%,rgba(232,137,58,.18),rgba(0,0,0,.25) 70%),#140e0a;border:1px solid rgba(255,225,190,.18);touch-action:none;cursor:grab}
+.pv{position:sticky;top:0;z-index:3;background:#140e0a;padding-bottom:6px}
+.pvbar{display:flex;gap:6px;justify-content:center;margin-top:6px}
+.pvbar button{min-width:44px;padding:7px 10px;border:1px solid rgba(255,225,190,.35);border-radius:2px;background:rgba(20,14,10,.55);color:#f1e6d6;font:600 12px Georgia,serif;cursor:pointer}
+.pvbar button.on{border-color:#e8893a;background:rgba(232,137,58,.35);color:#fff}
+.seg.tabs{justify-content:center;margin:10px 0 2px}
+.seg.tabs button{flex:1;padding:9px 6px;font:700 11px Cinzel,Georgia,serif;letter-spacing:.1em;text-transform:uppercase}
+.skp{display:none}.skp.on{display:block}
+.slotr{display:flex;align-items:center;gap:8px;margin:6px 0}
+.slotr>span{flex:0 0 52px;font-size:13px}
+.slotr .dots{display:flex;gap:3px;flex:1;min-width:0;font-size:12px;opacity:.9}
+.slotr .dots i{width:16px;height:16px;border:1px solid rgba(255,255,255,.3);border-radius:3px}
+.slotr .mbtn.sm{padding:7px 10px;font-size:11px;letter-spacing:.08em}
+#skCode{width:100%;box-sizing:border-box;padding:8px;background:rgba(20,14,10,.6);border:1px solid rgba(255,225,190,.35);color:#f1e6d6;font:12px monospace;border-radius:2px}
+#skMsg{min-height:16px;margin-top:8px;text-align:center;font-size:12px;color:#ffd9b0}
+#skMsg.err{color:#ff8a70}
+.chips button.on{border-color:#e8893a}
 .swr{display:flex;align-items:center;gap:8px;margin:7px 0}
 .swr>span{flex:0 0 92px;font-size:13px}
 .sws{display:flex;flex-wrap:wrap;gap:5px;flex:1;align-items:center}
@@ -130,6 +151,7 @@ input[type=text]:focus{border-color:#e8893a}
     <button class="mbtn" id="bSaves" style="display:none">Saves</button>
     <button class="mbtn" id="bMulti">Multiplayer</button>
     <button class="mbtn" id="bSkin">Skin</button>
+    <button class="mbtn" id="bAcct">Conta</button>
     <button class="mbtn" id="bCfg">Configurações</button>
     <div class="keys"><b>W</b><b>A</b><b>S</b><b>D</b> mover &nbsp; <b>Shift</b> correr &nbsp; <b>Espaço</b> pular &nbsp; <b>J</b> / clique atacar (combo de 3; com a espada, no ar: mergulho)<br><b>M</b> som &nbsp; <b>Scroll</b> zoom &nbsp; <b>Esc</b> menu</div>
     <div class="keys tkeys">Joystick à esquerda: mover (empurre até o fim para correr)<br><b>PULAR</b>: pular &nbsp; <b>ATACAR</b>: golpe &nbsp; <b>☰</b>: menu</div>
@@ -141,12 +163,53 @@ input[type=text]:focus{border-color:#e8893a}
   <div class="pane" id="p-skin">
     <div class="panel">
       <h2>Skin</h2>
-      <canvas id="prevCv"></canvas>
-      <div class="lbl">Estilos prontos</div><div class="chips" id="skPresets"></div>
-      <div class="lbl">Cores</div><div id="skRows"></div>
-      <div class="lbl">Capa</div><div class="seg l" id="skCape"></div>
-      <div class="lbl">Cabeça</div><div class="seg l" id="skHead"></div>
-      <div class="row2"><button class="mbtn sm" id="skRand">Aleatório</button><button class="mbtn sm" id="skReset">Redefinir</button></div>
+      <div class="pv">
+        <canvas id="prevCv"></canvas>
+        <div class="pvbar"><button id="pvL" title="Girar para a esquerda">&#x27F2;</button><button id="pvAuto" class="on">Girar</button><button id="pvR" title="Girar para a direita">&#x27F3;</button><button id="pvFlip">Costas</button></div>
+      </div>
+      <div class="seg tabs" id="skTabs"></div>
+      <div class="skp on" id="sk-presets">
+        <div class="lbl">Estilos prontos</div><div class="chips" id="skPresets"></div>
+        <div class="lbl">Meus looks</div><div id="skLooks"></div>
+        <div class="lbl">Código do look</div>
+        <input id="skCode" type="text" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <div class="row2" style="margin-top:8px"><button class="mbtn sm" id="skCopy">Copiar</button><button class="mbtn sm" id="skApply">Aplicar código</button></div>
+        <div id="skMsg"></div>
+      </div>
+      <div class="skp" id="sk-colors"><div id="skRows"></div></div>
+      <div class="skp" id="sk-head">
+        <div class="lbl">Cabelo</div><div class="seg l" id="skHair"></div>
+        <div class="lbl">Barba</div><div class="seg l" id="skBeard"></div>
+        <div class="lbl">Rosto</div><div class="seg l" id="skFace"></div>
+        <div class="lbl">Cabeça</div><div class="seg l" id="skHead"></div>
+      </div>
+      <div class="skp" id="sk-body">
+        <div class="lbl">Capa</div><div class="seg l" id="skCape"></div>
+        <div id="skCapeOpts">
+          <div class="lbl">Estilo da capa</div><div class="seg l" id="skCapeStyle"></div>
+          <div class="lbl">Acabamento</div><div class="seg l" id="skTrim"></div>
+        </div>
+        <div class="lbl">Ombreiras</div><div class="seg l" id="skShoulders"></div>
+      </div>
+      <div class="row2"><button class="mbtn sm" id="skRand">Aleat&oacute;rio</button><button class="mbtn sm" id="skUndo">Desfazer</button><button class="mbtn sm" id="skReset">Redefinir</button></div>
+    </div>
+    <button class="mbtn sec" data-back>Voltar</button>
+  </div>
+  <div class="pane" id="p-acct">
+    <div class="panel">
+      <h2>Conta</h2>
+      <div id="acOff">
+        <p class="hint">Crie uma conta com nome e senha para guardar skin, looks, configurações e saves e continuar de qualquer aparelho.</p>
+        <div class="lbl">Nome (3 a 14: letras, números ou _)</div><input id="acName" type="text" maxlength="14" autocomplete="username" autocapitalize="off" spellcheck="false">
+        <div class="lbl">Senha (mínimo 6)</div><input id="acPass" type="password" autocomplete="current-password">
+        <div class="row2"><button class="mbtn sm" id="acLogin">Entrar</button><button class="mbtn sm" id="acCreate">Criar conta</button></div>
+      </div>
+      <div id="acOn" style="display:none">
+        <div class="codebox"><span>Conectado como</span><b id="acWho" style="font-size:24px;letter-spacing:.12em"></b></div>
+        <p class="hint" id="acSync" style="text-align:center"></p>
+        <div class="row2"><button class="mbtn sm" id="acSyncNow">Sincronizar agora</button><button class="mbtn sm" id="acOut">Sair</button></div>
+      </div>
+      <div id="acMsg"></div>
     </div>
     <button class="mbtn sec" data-back>Voltar</button>
   </div>
@@ -205,7 +268,7 @@ const CHUNK = 16, RADIUS_ISO = 4, RADIUS_3P = 8; // chunk de 16×16 blocos; raio
 const WALK = 6, RUN = 10, JUMP = 12, GRAVITY = 32;
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 /* ---------- Configurações salvas no navegador ---------- */
-const LS = { get(k, d) { try { const v = JSON.parse(localStorage.getItem(k)); return v && typeof v === 'object' ? v : d; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
+const LS = { get(k, d) { try { const v = JSON.parse(localStorage.getItem(k)); return v && typeof v === 'object' ? v : d; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} if (window.cloudDirty) window.cloudDirty(k); } };
 const DEF_SET = { name: '', vol: 100, cam: 'iso', sens: 100, qual: 'high', shake: true, hud: true };
 const settings = Object.assign({}, DEF_SET, LS.get('ashenfall-settings', {}));
 let mpAN = 0, mpCB = 0; // contador de ataques e golpe atual (enviados aos outros jogadores)
@@ -267,14 +330,119 @@ const corr = (ix, iz) => ix >= -GATE_X && ix < GATE_X && iz + .5 < -EG + 2 && iz
 const SIDE_G = [0, Math.PI].map(a => { const E = caveEdge(a); return { ux: Math.cos(a), uz: Math.sin(a), E, G: E + 1.5, p: 0, open: false, cnt: 0 }; });
 const inNotch = (x, z) => { for (const g of SIDE_G) { const al = x * g.ux + z * g.uz, la = Math.abs(-x * g.uz + z * g.ux); if (la < 3 && al > g.E - 2 && al < g.E + 3.6) return true; } return false; };
 const NPC_X = 0, NPC_Z = -6;                                              // posição do mago (praça, no caminho do portão)
+let villageSeen = false, trailSeen = false;
+const TEST_MODE = !/[?&]teste=0/.test(location.search);   // MODO DE TESTE: já nasce com chave e espada, arena limpa (use ?teste=0 ou mude para false para desligar)
 let gateP = 0, gateOn = false, hasKey = false; // hasKey = true (ao pegar a chave) faz o portão abrir                                            // progresso de abertura do portão (0..1)
 const PILLARS = [], BRAZ = [[-8, -8], [6, -8], [-8, 6], [6, 6]];                // pilares (centros) e braseiros (cantos 2×2)
 for (let k = 0; k < 8; k++) { const a = k * Math.PI / 4 + Math.PI / 8; PILLARS.push([Math.round(Math.cos(a) * 18), Math.round(Math.sin(a) * 18)]); }
 // Cúpula de blocos: casco entre duas elipsoides (interna e externa) centradas em y=4; a parede sobe até encontrá-la
 const DR_I = 47, DH_I = 13, DR_O = 49.5, DH_O = 15.5; // cúpula mais baixa: a parede continua com ~12 blocos, como antes
+/* ---------- Trilha de terra até a vila distante (norte, além do portão) ---------- */
+const TRAIL = [[0, -(EG + 5)], [0, -80], [16, -115], [34, -150], [30, -190], [8, -225], [-22, -255], [-30, -295], [-8, -335], [24, -365], [40, -398], [40, -410]];
+const VX = 40, VZ = -422;                                   // centro da praça da vila
+const STREAMS = [-132, -298];                               // riachos que cruzam a trilha (z central)
+const streamZ = (z0, x) => z0 + 2.2 * Math.sin(x * .07 + z0);
+const nearStream = (x, z, m) => { for (const z0 of STREAMS) if (Math.abs(z - streamZ(z0, x)) < m) return true; return false; };
+function streamH(ix, iz) {                                  // 3 = água rasa, 4 = ponte onde a trilha cruza, 0 = nada
+  for (const z0 of STREAMS) {
+    if (iz < z0 - 7 || iz > z0 + 7) continue;
+    const x = ix + .5, z = iz + .5, w = 1.9 + .5 * Math.sin(x * .13 + z0);
+    if (Math.abs(z - streamZ(z0, x)) < w) return trailD(x, z) < 2.4 ? 4 : 3;
+  }
+  return 0;
+}
+function trailD(x, z) {                                     // distância até o eixo da trilha
+  if (z > TRAIL[0][1] + 2 || z < -416 || x < -40 || x > 50) return 99;
+  let m = 99;
+  for (let i = 0; i < TRAIL.length - 1; i++) {
+    const a = TRAIL[i], b = TRAIL[i + 1], dx = b[0] - a[0], dz = b[1] - a[1];
+    let t = ((x - a[0]) * dx + (z - a[1]) * dz) / (dx * dx + dz * dz); t = t < 0 ? 0 : t > 1 ? 1 : t;
+    const d = Math.hypot(x - a[0] - dx * t, z - a[1] - dz * t); if (d < m) m = d;
+  }
+  return m;
+}
+const onTrail = (ix, iz) => trailD(ix + .5, iz + .5) < 1.6 + 1.1 * hash(ix * 7 + 3, iz * 11 + 5);   // borda irregular
+// casas: [dx, dz, largura, profundidade, lado da porta] relativos ao centro da praça
+const HOUSES = [[-14, -2, 7, 6, 'E'], [14, -2, 7, 6, 'W'], [0, -17, 9, 6, 'S'], [-13, 11, 6, 6, 'E'], [13, 11, 6, 6, 'W'], [-27, -8, 6, 5, 'E'], [27, -8, 6, 5, 'W'], [-26, 8, 5, 5, 'E']]
+  .map(([dx, dz, w, d, door]) => { const x0 = VX + dx - (w >> 1), z0 = VZ + dz - (d >> 1); return { x0, z0, x1: x0 + w - 1, z1: z0 + d - 1, door }; });
+const houseAt = (ix, iz) => { for (const H of HOUSES) if (ix >= H.x0 && ix <= H.x1 && iz >= H.z0 && iz <= H.z1) return H; return null; };
+const inVil = (ix, iz) => iz > VZ - 24 && iz < VZ + 20 && ix > VX - 34 && ix < VX + 34;
+const inWell = (ix, iz) => Math.abs(ix - VX) <= 1 && Math.abs(iz - VZ) <= 1;
+function villageH(ix, iz) {                                 // casas (paredes + telhado em degraus) e poço; 0 = nada
+  if (!inVil(ix, iz)) return 0;
+  const H = houseAt(ix, iz);
+  if (H) return 8 + Math.min(3, ix - H.x0, H.x1 - ix, iz - H.z0, H.z1 - iz);
+  if (inWell(ix, iz)) return ix === VX && iz === VZ ? 5 : 6;
+  return 0;
+}
+function villageTop(ix, iz, h) {                            // tile do topo: telhado, poço, praça de pedras, trilha; -1 = padrão
+  if (h === 3) return hash(ix * 7 + 2, iz * 5 + 9) > .55 ? 15 : 3;   // leito do riacho (terra e cascalho); a água é uma malha própria
+  if (h === 4 && streamH(ix, iz) === 4) return 8;           // tábuas da ponte
+  if (h > 4) { if (houseAt(ix, iz)) return 9; if (inVil(ix, iz) && inWell(ix, iz)) return h === 5 ? 13 : 6; return -1; }
+  const x = ix + .5 - VX, z = iz + .5 - VZ;
+  if (x * x + z * z < 81) return hash(ix * 3 + 2, iz * 5 + 7) > .6 ? 6 : 1;
+  return trailTile(ix, iz);
+}
+const trailHW = (x, z) => clamp(1.9 + 2 * (fbm(x * .06 + 9, z * .06 - 4) - .5), 1.3, 3);   // largura variável da trilha
+function trailTile(ix, iz) {
+  const x = ix + .5, z = iz + .5, d = trailD(x, z); if (d > 4.2) return -1;
+  const hw = trailHW(x, z);
+  if (d < hw - .9) return hash(ix * 5 + 1, iz * 3 + 7) > .88 ? 15 : 11;
+  if (d < hw) return hash(ix * 3 + 5, iz * 7 + 2) > .45 ? 11 : 14;
+  if (d < hw + .9 && hash(ix * 11 + 3, iz * 13 + 1) > .5) return 14;
+  return -1;
+}
+// postes de luz ao longo da trilha, placa na saída do portão e arco de entrada da vila
+const TRAIL_PROPS = (() => {
+  const P = [{ k: 'sign', x: 4.2, z: TRAIL[0][1] - 6 }, { k: 'arch', x: VX, z: VZ + 15 }];
+  let acc = 0, next = 30, side = 1;
+  for (let i = 0; i < TRAIL.length - 1; i++) {
+    const a = TRAIL[i], b = TRAIL[i + 1], dx = b[0] - a[0], dz = b[1] - a[1], L = Math.hypot(dx, dz);
+    while (next - acc <= L) { const t = (next - acc) / L; P.push({ k: 'lamp', x: a[0] + dx * t - dz / L * 3.3 * side, z: a[1] + dz * t + dx / L * 3.3 * side }); side = -side; next += 36; }
+    acc += L;
+  }
+  const TL = (() => { let L = 0; for (let i = 0; i < TRAIL.length - 1; i++) L += Math.hypot(TRAIL[i + 1][0] - TRAIL[i][0], TRAIL[i + 1][1] - TRAIL[i][1]); return L; })();
+  const at = sv => { let ac = 0; for (let i = 0; i < TRAIL.length - 1; i++) { const a = TRAIL[i], b = TRAIL[i + 1], dx = b[0] - a[0], dz = b[1] - a[1], L = Math.hypot(dx, dz); if (sv <= ac + L || i === TRAIL.length - 2) { const t = clamp((sv - ac) / L, 0, 1); return { x: a[0] + dx * t, z: a[1] + dz * t, dx: dx / L, dz: dz / L }; } ac += L; } };
+  let n = 0;
+  const put = (k, sv, off) => {
+    const q = at(sv), sg = hash(++n * 7 + 1, 33) > .5 ? 1 : -1, x = q.x - q.dz * off * sg, z = q.z + q.dx * off * sg;
+    if (nearStream(x, z, 5) || Math.hypot(x - VX, z - VZ) < 40) return;
+    P.push({ k, x, z, dx: q.dx, dz: q.dz, seed: n * 13 });
+  };
+  for (let sv = 12; sv < TL - 14; sv += 6 + ((hash(sv | 0, 5) * 4) | 0)) put('flowers', sv, 2.6 + hash(sv | 0, 9) * 2.2);   // canteiros de flores
+  for (const sv of [95, 185, 290, 355]) put('fence', sv, 3.7);                                                                // cercas
+  for (const sv of [150, 322]) put('cart', sv, 5.2);                                                                           // carroças com feno
+  for (const sv of [60, 215]) put('camp', sv, 5.6);                                                                            // fogueiras de descanso
+  for (let sv = 40; sv < TL - 20; sv += 21 + ((hash(sv | 0, 3) * 20) | 0)) put(hash(sv | 0, 7) > .5 ? 'stump' : 'log', sv, 4 + hash(sv | 0, 11) * 2.5);
+  for (const sv of [130, 250, 340]) put('sign', sv, 3.6);                                                                      // placas de caminho
+  for (const z0 of STREAMS) {                                                                                                  // guarda-corpos das pontes
+    let bx = 0, bz = z0; for (let i = 0; i < 3; i++) { bx = at(0).x; for (let sv = 0; sv < TL; sv += .5) { const q = at(sv); if (Math.abs(q.z - streamZ(z0, q.x)) < 1) { bx = q.x; break; } } bz = streamZ(z0, bx); }
+    P.push({ k: 'bridge', x: bx, z: bz });
+  }
+  return P.filter(p => p.k !== 'lamp' || (Math.hypot(p.x - VX, p.z - (VZ + 15)) > 7 && !nearStream(p.x, p.z, 4.5)));
+})();
+const DOOR_D = { E: [1, 0], W: [-1, 0], S: [0, 1], N: [0, -1] };
+function sideTile(wx, wz, b, nx, nz, stone, dp) {           // tile das laterais: paredes de madeira, porta, janelas, telhado
+  if (b === 3 && streamH(wx, wz) === 4) return 8;           // lateral da ponte
+  if (inVil(wx, wz)) {
+    const H = houseAt(wx, wz);
+    if (H) {
+      if (b >= 8) return 9;
+      const dd = DOOR_D[H.door];
+      const dcx = H.door === 'E' ? H.x1 : H.door === 'W' ? H.x0 : H.x0 + ((H.x1 - H.x0 + 1) >> 1);
+      const dcz = H.door === 'S' ? H.z1 : H.door === 'N' ? H.z0 : H.z0 + ((H.z1 - H.z0 + 1) >> 1);
+      if (nx === dd[0] && nz === dd[1] && wx === dcx && wz === dcz && b < 6) return 10;
+      if (b === 5 && ((nx ? wz : wx) & 1)) return 12;
+      return 8;
+    }
+  }
+  return stone ? 4 : dp === 0 ? 2 : dp < 3 ? 3 : 4;
+}
 function terrainH(ix, iz) {
   const x = ix + .5, z = iz + .5, r = Math.hypot(x, z);
   if (corr(ix, iz) || inNotch(x, z)) return 4;
+  const vh = villageH(ix, iz); if (vh) return vh;
+  const sh = streamH(ix, iz); if (sh) return sh;
   const d = r - caveEdge(Math.atan2(z, x));
   if (d >= 5) return 4;                                 // fora da arena: campo de grama totalmente reto
   if (d < 0) {                                            // dentro do salão
@@ -293,6 +461,7 @@ function terrainH(ix, iz) {
 const inCave = (ix, iz) => { const x = ix + .5, z = iz + .5; return Math.hypot(x, z) < caveEdge(Math.atan2(z, x)) + 1; };
 // piso decorado: praça de lajes escuras com anéis de tijolo, caminho de tijolos até o portão, musgo esparso
 function topTile(ix, iz, h, stone) {
+  const vt = villageTop(ix, iz, h); if (vt >= 0) return vt;
   if (!stone) return 0;
   if (h !== 4) return 1;
   if (corr(ix, iz)) return ix >= -2 && ix < 2 ? 5 : 1;
@@ -330,7 +499,7 @@ const groundAt = (x, z) => terrainH(Math.floor(x), Math.floor(z));
 // Atlas 8 tiles de 8px (pixel art): 0 grama·topo, 1 pedra·topo, 2 terra c/ franja de grama, 3 terra, 4 pedra·lateral
 function makeAtlas() {
   const T = 8, c = document.createElement('canvas');
-  c.width = T * 8; c.height = T;
+  c.width = T * 16; c.height = T;
   const g = c.getContext('2d');
   let seed = 20240607; const rnd = () => ((seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0) / 4294967296);
   const put = (tile, x, y, r, gg, b, j) => {
@@ -352,11 +521,67 @@ function makeAtlas() {
   }
   g.fillStyle = 'rgba(0,0,0,.16)';
   for (let i = 0; i < 6; i++) g.fillRect(4 * T + ((rnd() * T) | 0), (rnd() * T) | 0, 1 + ((rnd() * 3) | 0), 1);
+  for (let y = 0; y < T; y++) for (let x = 0; x < T; x++) {   // 8 madeira · 9 telhado · 10 porta · 11 trilha · 12 janela · 13 água
+    const pl = y % 4 === 0, wr = pl ? 112 : 158, wg = pl ? 76 : 112, wb = pl ? 44 : 66;
+    put(8, x, y, wr, wg, wb, 14);
+    const sh = y % 4 === 0 || (x + (y >> 2) * 3) % 8 === 0;
+    put(9, x, y, sh ? 118 : 176, sh ? 46 : 78, sh ? 36 : 54, 14);
+    const hd = x === 5 && y === 4, dk = x % 4 === 0;
+    put(10, x, y, hd ? 220 : dk ? 70 : 100, hd ? 190 : dk ? 44 : 64, hd ? 90 : dk ? 26 : 38, 10);
+    const pb = rnd() > .93;
+    put(11, x, y, pb ? 168 : 142, pb ? 158 : 110, pb ? 146 : 74, 22);
+    const fr = x >= 2 && x <= 5 && y >= 2 && y <= 5, fe = fr && (x === 2 || x === 5 || y === 2 || y === 5);
+    if (fr) { if (fe) put(12, x, y, 74, 48, 28, 8); else put(12, x, y, 150, 195, 220, 16); } else put(12, x, y, wr, wg, wb, 14);
+    put(13, x, y, 58 + (y % 3 === 0 ? 12 : 0), 112, 170, 14);
+    const g2 = rnd() > .5; put(14, x, y, g2 ? 98 : 142, g2 ? 142 : 110, g2 ? 68 : 74, 24);
+    const p2 = rnd() > .9; put(15, x, y, p2 ? 176 : 150, p2 ? 170 : 118, p2 ? 160 : 82, 20);
+  }
   const tex = new THREE.CanvasTexture(c);
   tex.magFilter = THREE.NearestFilter; tex.minFilter = THREE.NearestMipmapLinearFilter; tex.anisotropy = 4;
   return tex;
 }
 const groundMat = new THREE.MeshLambertMaterial({ map: makeAtlas(), vertexColors: true });
+// Água realista: ondas animadas (normais analíticas), reflexo do céu por Fresnel, brilho do sol, cáusticas, espuma na margem e transparência
+const waterMat = new THREE.ShaderMaterial({
+  transparent: true, depthWrite: false, side: THREE.DoubleSide, fog: true,
+  uniforms: THREE.UniformsUtils.merge([THREE.UniformsLib.fog, { uTime: { value: 0 }, uSky: { value: new THREE.Color(SKY) }, uSun: { value: new THREE.Vector3(25, 40, 15).normalize() } }]),
+  vertexShader: `attribute float aShore; varying vec3 vWP; varying float vShore;
+#include <fog_pars_vertex>
+void main() { vec4 wp = modelMatrix * vec4(position, 1.0); vWP = wp.xyz; vShore = aShore; vec4 mvPosition = viewMatrix * wp; gl_Position = projectionMatrix * mvPosition;
+#include <fog_vertex>
+}`,
+  fragmentShader: `uniform float uTime; uniform vec3 uSky; uniform vec3 uSun; varying vec3 vWP; varying float vShore;
+#include <fog_pars_fragment>
+float hs(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+float vn(vec2 p) { vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f); return mix(mix(hs(i), hs(i + vec2(1.0, 0.0)), f.x), mix(hs(i + vec2(0.0, 1.0)), hs(i + vec2(1.0, 1.0)), f.x), f.y); }
+void main() {
+  vec2 p = vWP.xz; float t = uTime;
+  vec2 d1 = vec2(.9, .25), d2 = vec2(-.35, 1.0), d3 = vec2(1.0, .6);
+  float p1 = dot(p, d1) * 1.7 - t * 1.3, p2 = dot(p, d2) * 2.6 - t * 1.8 + 1.7, p3 = dot(p, d3) * 4.3 - t * 2.7;
+  vec2 g = d1 * 1.7 * cos(p1) * .028 + d2 * 2.6 * cos(p2) * .018 + d3 * 4.3 * cos(p3) * .010;
+  vec2 q = p * 3.5 - vec2(t * .9, 0.0); g += (vec2(vn(q), vn(q + 17.3)) - .5) * .12;
+  vec3 n = normalize(vec3(-g.x, 1.0, -g.y));
+  vec3 V = normalize(cameraPosition - vWP);
+  float cv = max(dot(n, V), 0.0), fres = .12 + .88 * pow(1.0 - cv, 3.0);
+  vec3 deep = vec3(.04, .2, .27), shallow = vec3(.2, .48, .44);
+  vec3 water = mix(deep, shallow, smoothstep(0.0, 1.0, vShore * .9 + vn(p * .8 + t * .1) * .3));
+  vec3 R = reflect(-V, n);
+  float cl = smoothstep(.5, .9, vn(R.xz * 2.5 / (abs(R.y) + .35) + t * .03));
+  vec3 refl = mix(uSky * 1.08, vec3(.96, .98, 1.0), cl * .7);
+  vec3 col = mix(water, refl, fres);
+  vec3 L = normalize(uSun), Hh = normalize(L + V);
+  col += vec3(1.0, .93, .78) * pow(max(dot(n, Hh), 0.0), 140.0) * (.5 + vn(p * 7.0 + t * 1.5)) * 1.8;
+  float cs = pow(max(0.0, sin(dot(p, vec2(1.7, .8)) * 3.1 + t * 1.1 + vn(p * 2.0) * 4.0) * sin(dot(p, vec2(-.6, 1.4)) * 2.7 - t * .9)), 3.0);
+  col += vec3(.5, .8, .8) * cs * .16;
+  float fn = vn(p * 5.0 + vec2(t * .35, 0.0)) * .6 + vn(p * 11.0 - t * .2) * .4;
+  float foam = smoothstep(.55, .95, vShore) * smoothstep(.35, .7, fn + vShore * .35);
+  col = mix(col, vec3(.95, .98, 1.0), foam * .85);
+  float a = clamp(mix(.8, .5, vShore) + fres * .3, 0.0, 1.0); a = mix(a, .95, foam);
+  gl_FragColor = vec4(col, a);
+#include <fog_fragment>
+}`
+});
+const waterU = waterMat.uniforms;
 // Transparência: blocos entre a câmera e o jogador ficam com baixa opacidade (dither em tela, sem problemas de ordenação)
 // Máscara de colunas (grade OG×OG em torno do jogador): 0 = opaca, 1 = some. Preenchida por updateOcclusion().
 const OG = 48, otexData = new Uint8Array(OG * OG), ofade = new Map();
@@ -433,12 +658,13 @@ const roofMat = new THREE.MeshLambertMaterial({ map: groundMat.map, vertexColors
 roofMat.onBeforeCompile = groundMat.onBeforeCompile;   // mesma transparência por coluna do terreno
 /* ---------- Árvores: floresta fora da arena (posições determinísticas; tronco é sólido) ---------- */
 function treeCellPos(cx, cz) {
-  if (hash(cx * 131 + 7, cz * 71 + 3) < .35) return null;
+  if (hash(cx * 131 + 7, cz * 71 + 3) < .85) return null;   // só ~15% das células têm árvore
   return [cx * 3 + Math.min(2, (hash(cx + 11, cz * 5 + 2) * 3) | 0), cz * 3 + Math.min(2, (hash(cx * 3 + 5, cz + 17) * 3) | 0)];
 }
 function treeOK(tx, tz) {
   const x = tx + .5, z = tz + .5;
   if (Math.abs(z) < 6 || (Math.abs(x) < 6 && z < 0)) return false;   // mantém livres as saídas dos portões
+  if (nearStream(x, z, 5) || trailD(x, z) < 7 || Math.hypot(x - VX, z - VZ) < 40) return false;   // trilha e vila livres
   return Math.hypot(x, z) - caveEdge(Math.atan2(z, x)) >= 9;
 }
 function trunkAt(ix, iz) { const p = treeCellPos(Math.floor(ix / 3), Math.floor(iz / 3)); return !!p && p[0] === ix && p[1] === iz && treeOK(ix, iz); }
@@ -452,13 +678,22 @@ treeMat.onBeforeCompile = sh => {
   vTW = (modelMatrix * vec4(transformed, 1.0)).xyz;`);
   sh.fragmentShader = 'varying vec3 vTW; uniform vec3 uPl; uniform vec3 uDir;\n' + sh.fragmentShader.replace('#include <clipping_planes_fragment>', `#include <clipping_planes_fragment>
   { vec3 d = vTW - uPl; float t = dot(d, uDir); vec3 q = d - uDir * t;
-    float f = t > 0.3 ? 1.0 - smoothstep(1.2, 2.6, length(q)) : 0.0;
+    float f = t > 0.3 ? 1.0 - smoothstep(2.4, 4.6, length(q)) : 0.0;
     float n = fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715))));
     if (f > 0.99 || n > 1.0 - f) discard; }`);
 };
 const chunks = new Map(), buildQ = [];
 const AO_K = [.5, .7, .86, 1];            // oclusão ambiente nos cantos (0 = muito ocluído … 3 = livre)
 const DIRS = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+const ICO = (() => {   // icosfera (80 faces) usada nas copas das árvores
+  const t = (1 + Math.sqrt(5)) / 2;
+  const V = [[-1, t, 0], [1, t, 0], [-1, -t, 0], [1, -t, 0], [0, -1, t], [0, 1, t], [0, -1, -t], [0, 1, -t], [t, 0, -1], [t, 0, 1], [-t, 0, -1], [-t, 0, 1]].map(v => { const l = Math.hypot(v[0], v[1], v[2]); return v.map(c => c / l); });
+  const F = [[0, 11, 5], [0, 5, 1], [0, 1, 7], [0, 7, 10], [0, 10, 11], [1, 5, 9], [5, 11, 4], [11, 10, 2], [10, 7, 6], [7, 1, 8], [3, 9, 4], [3, 4, 2], [3, 2, 6], [3, 6, 8], [3, 8, 9], [4, 9, 5], [2, 4, 11], [6, 2, 10], [8, 6, 7], [9, 8, 1]];
+  const mid = new Map(), gm = (a, b) => { const k = a < b ? a + '_' + b : b + '_' + a; if (mid.has(k)) return mid.get(k); const m = [V[a][0] + V[b][0], V[a][1] + V[b][1], V[a][2] + V[b][2]], l = Math.hypot(m[0], m[1], m[2]); V.push([m[0] / l, m[1] / l, m[2] / l]); mid.set(k, V.length - 1); return V.length - 1; };
+  const F2 = []; for (const [a, b, c] of F) { const ab = gm(a, b), bc = gm(b, c), ca = gm(c, a); F2.push([a, ab, ca], [b, bc, ab], [c, ca, bc], [ab, bc, ca]); }
+  for (const f of F2) { const a = V[f[0]], b = V[f[1]], c = V[f[2]]; const n0 = (b[1] - a[1]) * (c[2] - a[2]) - (b[2] - a[2]) * (c[1] - a[1]), n1 = (b[2] - a[2]) * (c[0] - a[0]) - (b[0] - a[0]) * (c[2] - a[2]), n2 = (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0]); if (n0 * a[0] + n1 * a[1] + n2 * a[2] < 0) { const q = f[1]; f[1] = f[2]; f[2] = q; } }
+  return { V, F: F2 };
+})();
 
 function buildChunk(cx, cz) {
   const N = CHUNK + 2, hs = new Int16Array(N * N), x0 = cx * CHUNK, z0 = cz * CHUNK;
@@ -472,17 +707,23 @@ function buildChunk(cx, cz) {
       const y = v[k * 3 + 1], s = br * AO_K[ao[k]] * (.78 + .22 * Math.min(1, y / MAXH)); // AO + vales mais escuros
       P.push(v[k * 3], y, v[k * 3 + 2]); NR.push(nx, ny, nz); CL.push(s, s, s);
       const q = (k + rot) & 3;
-      UV.push((tile * 8 + .05 + (q === 1 || q === 2 ? 7.9 : 0)) / 64, (.05 + (q >= 2 ? 7.9 : 0)) / 8);
+      UV.push((tile * 8 + .05 + (q === 1 || q === 2 ? 7.9 : 0)) / 128, (.05 + (q >= 2 ? 7.9 : 0)) / 8);
     }
     if (ao[0] + ao[2] > ao[1] + ao[3]) IX.push(vc + 1, vc + 2, vc + 3, vc + 1, vc + 3, vc); // diagonal que evita artefato de AO
     else IX.push(vc, vc + 1, vc + 2, vc, vc + 2, vc + 3);
     vc += 4;
   }
+  const WPOS = [], WSH = [], WIDX = []; let wvc = 0;
   for (let i = 0; i < CHUNK; i++) for (let j = 0; j < CHUNK; j++) {
     const h = H(i, j), wx = x0 + i, wz = z0 + j, stone = isStone(wx, wz) || h >= 5 || inCave(wx, wz) || corr(wx, wz) || inNotch(wx + .5, wz + .5), hv = hash(wx * 3 + 7, wz * 5 + 11);
     if (h <= 0) continue;                                    // vazio: sem topo
+    if (h === 3) {                                           // superfície da água (nível 3.72); aShore = 1 nos cantos que tocam a margem
+      for (const [cx, cz] of [[0, 0], [0, 1], [1, 1], [1, 0]]) { const a = cx ? 1 : -1, b = cz ? 1 : -1; WPOS.push(i + cx, 3.72, j + cz); WSH.push(H(i + a, j) > 3 || H(i, j + b) > 3 || H(i + a, j + b) > 3 ? 1 : 0); }
+      WIDX.push(wvc, wvc + 1, wvc + 3, wvc + 1, wvc + 2, wvc + 3); wvc += 4;
+    }
     let br = .9 + .1 * hv;
     if (h >= 11) br *= .6;                                   // topo da parede mais escuro, sem brilho no alto da tela
+    if (h === 3) br *= .72;                                  // leito do riacho mais escuro (profundidade)
     if (!stone) br *= .8 + .35 * fbm(wx * .02, wz * .02);   // viço da grama (como no chão original)
     const ac = (sx, sz) => { const s1 = solid(i + sx, j, h), s2 = solid(i, j + sz, h), c = solid(i + sx, j + sz, h); return s1 && s2 ? 0 : 3 - (s1 + s2 + c); };
     quad([i, h, j + 1, i + 1, h, j + 1, i + 1, h, j, i, h, j], 0, 1, 0, topTile(wx, wz, h, stone), [ac(-1, 1), ac(1, 1), ac(1, -1), ac(-1, -1)], br, (hv * 4) | 0); // topo
@@ -491,7 +732,7 @@ function buildChunk(cx, cz) {
       const rx = nz, rz = -nx, mx = i + .5 + nx * .5, mz = j + .5 + nz * .5;
       const ax = mx - rx * .5, az = mz - rz * .5, bx = mx + rx * .5, bz = mz + rz * .5, fx = i + nx, fz = j + nz;
       for (let b = hn; b < h; b++) {
-        const dp = h - 1 - b, tile = stone ? 4 : dp === 0 ? 2 : dp < 3 ? 3 : 4;
+        const dp = h - 1 - b, tile = sideTile(wx, wz, b, nx, nz, stone, dp);
         const ad = (st, sv) => { const tx = fx + st * rx, tz = fz + st * rz, s1 = solid(tx, tz, b), s2 = solid(fx, fz, b + sv), c = solid(tx, tz, b + sv); return s1 && s2 ? 0 : 3 - (s1 + s2 + c); };
         quad([ax, b, az, bx, b, bz, bx, b + 1, bz, ax, b + 1, az], nx, 0, nz, tile, [ad(-1, -1), ad(1, -1), ad(1, 1), ad(-1, 1)], .9 + .1 * hash(wx * 7 + b * 131, wz * 13 + b * 17), 0);
       }
@@ -519,7 +760,7 @@ function buildChunk(cx, cz) {
         for (let k = 0; k < 4; k++) {
           const c = f[3 + k];
           RP.push(i + c[0], b + c[1], j + c[2]); RN.push(f[0], f[1], f[2]); RC.push(sh, sh, sh);
-          RU.push((32 + .05 + (k === 1 || k === 2 ? 7.9 : 0)) / 64, (.05 + (k >= 2 ? 7.9 : 0)) / 8);
+          RU.push((32 + .05 + (k === 1 || k === 2 ? 7.9 : 0)) / 128, (.05 + (k >= 2 ? 7.9 : 0)) / 8);
         }
         RI.push(rv, rv + 1, rv + 2, rv, rv + 2, rv + 3); rv += 4;
       }
@@ -534,6 +775,11 @@ function buildChunk(cx, cz) {
   const m = new THREE.Mesh(geo, groundMat);
   m.position.set(x0, 0, z0); m.castShadow = true; m.receiveShadow = true;
   m.matrixAutoUpdate = false; m.updateMatrix();
+  if (WIDX.length) {
+    const wg = new THREE.BufferGeometry();
+    wg.setAttribute('position', new THREE.Float32BufferAttribute(WPOS, 3)); wg.setAttribute('aShore', new THREE.Float32BufferAttribute(WSH, 1)); wg.setIndex(WIDX);
+    const wm = new THREE.Mesh(wg, waterMat); wm.renderOrder = 2; m.add(wm);
+  }
   if (RI.length) { // teto: malha separada, não projeta sombra (o salão continua iluminado)
     const rg = new THREE.BufferGeometry();
     rg.setAttribute('position', new THREE.Float32BufferAttribute(RP, 3)); rg.setAttribute('normal', new THREE.Float32BufferAttribute(RN, 3));
@@ -568,59 +814,75 @@ function buildChunk(cx, cz) {
       }
     };
     const put = (vox, dx, y, dz, r, g, b, sw) => vox.set(vk(dx, y, dz), [dx, y, dz, r, g, b, sw]);
+    // ---- árvores de malha suave (copas de icosfera achatada, troncos cônicos, pinheiros em cones) ----
+    const tri = (a, b, c, col, sh, sa, sb, sc) => {   // triângulo com normal plana (visual "low-poly")
+      const ux = b[0] - a[0], uy = b[1] - a[1], uz = b[2] - a[2], vx = c[0] - a[0], vy = c[1] - a[1], vz = c[2] - a[2];
+      let nx = uy * vz - uz * vy, ny = uz * vx - ux * vz, nz = ux * vy - uy * vx; const l = Math.hypot(nx, ny, nz) || 1; nx /= l; ny /= l; nz /= l;
+      const ps = [a, b, c], ss = [sa, sb, sc];
+      for (let i = 0; i < 3; i++) { TP.push(ps[i][0] - x0, ps[i][1], ps[i][2] - z0); TN.push(nx, ny, nz); TC.push(col[0] * sh, col[1] * sh, col[2] * sh); TW.push(ss[i]); }
+      TI.push(tv, tv + 1, tv + 2); tv += 3;
+    };
+    const leafBlob = (cx, cy, cz, rx, ry, rz, col, seed) => {
+      const P = ICO.V.map((v, i) => { const f = 1 + (hash(seed * 7 + i * 13, seed * 3 + i * 5) - .5) * .3; return [cx + v[0] * rx * f, cy + v[1] * ry * f, cz + v[2] * rz * f]; });
+      for (const [ia, ib, ic] of ICO.F) {
+        const a = P[ia], b = P[ib], c = P[ic], my = clamp(((a[1] + b[1] + c[1]) / 3 - (cy - ry)) / (2 * ry), 0, 1);
+        tri(a, b, c, col, (.6 + .55 * my) * (.94 + .12 * hash(seed * 11 + ia * 3 + ib * 7, ic * 5 + seed)), 1, 1, 1);
+      }
+    };
+    const cone = (cx, y0, cz, r, h, col, seed, shade) => {
+      const sides = 9, ring = [];
+      for (let k = 0; k < sides; k++) { const t = k / sides * 6.2832, f = 1 + (hash(seed + k * 7, seed * 3 + k) - .5) * .22; ring.push([cx + Math.cos(t) * r * f, y0 + (k & 1 ? .15 : -.05), cz - Math.sin(t) * r * f]); }
+      const ap = [cx, y0 + h, cz];
+      for (let k = 0; k < sides; k++) tri(ring[k], ring[(k + 1) % sides], ap, col, shade * (.93 + .14 * hash(seed + k * 3, seed * 5 + k)), .7, .7, 1);
+    };
+    const limb = (ax, ay, az, bx, by, bz, r0, r1, col, sw) => {   // cilindro cônico entre dois pontos
+      const dx = bx - ax, dy = by - ay, dz = bz - az, L = Math.hypot(dx, dy, dz), ux = dx / L, uy = dy / L, uz = dz / L, sides = 6;
+      let px, py, pz; if (Math.abs(uy) < .9) { px = -uz; py = 0; pz = ux; } else { px = 1; py = 0; pz = 0; }
+      const pl = Math.hypot(px, py, pz); px /= pl; py /= pl; pz /= pl;
+      const qx = uy * pz - uz * py, qy = uz * px - ux * pz, qz = ux * py - uy * px, base = tv;
+      for (let ring = 0; ring < 2; ring++) for (let k = 0; k < sides; k++) {
+        const t = k / sides * 6.2832, c = Math.cos(t), sn = Math.sin(t), r = ring ? r1 : r0, nx = px * c + qx * sn, ny = py * c + qy * sn, nz = pz * c + qz * sn, q = (.8 + .3 * (nx * .6 + nz * .4 + .5)) * (ring ? 1 : .8);
+        TP.push(ax + dx * ring + nx * r - x0, ay + dy * ring + ny * r, az + dz * ring + nz * r - z0); TN.push(nx, ny, nz); TC.push(col[0] * q, col[1] * q, col[2] * q); TW.push(sw * ring);
+      }
+      for (let k = 0; k < sides; k++) { const k2 = (k + 1) % sides; TI.push(base + k, base + k2, base + sides + k, base + k2, base + sides + k2, base + sides + k); }
+      tv += sides * 2;
+    };
     const buildTree = (tx, tz) => {
-      const vox = new Map(), R = n => hash(tx * 37 + n * 101, tz * 53 + n * 59 + 7);
+      const R = n => hash(tx * 37 + n * 101, tz * 53 + n * 59 + 7), sd = (tx * 31 + tz * 17) & 0xffff, cx = tx + .5, cz = tz + .5;
       const reg = fbm(tx * .03 + 5, tz * .03 - 3), w = R(1), autumn = fbm(tx * .02 - 40, tz * .02 + 9) > .56;
       const pineP = reg < .42 ? .6 : .15, birchP = reg > .6 ? .3 : .18;
       const type = w < pineP ? 'pine' : w < pineP + birchP ? 'birch' : R(2) > .93 ? 'dead' : 'oak';
-      const bark = (dx, y, dz, c, j) => { const q = 1 + (R(y * 7 + dx * 3 + dz * 5 + 9) - .5) * j; put(vox, dx, y, dz, c[0] * q, c[1] * q, c[2] * q, 0); };
-      const D4 = [[1, 0], [-1, 0], [0, 1], [0, -1]];
-      const blob = (spheres, y0, y1, pal, ymin, ymax, hole) => {
-        for (let dx = -6; dx <= 6; dx++) for (let dz = -6; dz <= 6; dz++) for (let y = y0; y <= y1; y++) {
-          let ins = false;
-          for (const s of spheres) { const a = dx + .5 - s[0], b = y + .5 - s[1], c = dz + .5 - s[2]; if (a * a + b * b * 1.35 + c * c <= s[3] * s[3]) { ins = true; break; } }
-          if (!ins || R(y * 11 + dx * 17 + dz * 23 + 100) < hole) continue;
-          if (vox.has(vk(dx, y, dz))) continue;
-          const c = pal[(R(y * 3 + dx * 5 + dz * 7 + 200) * pal.length) | 0], sh = .7 + .45 * clamp((y - ymin) / (ymax - ymin), 0, 1), j = .86 + .28 * R(y * 5 + dx * 9 + dz * 13 + 300);
-          put(vox, dx, y, dz, c[0] * sh * j, c[1] * sh * j, c[2] * sh * j, 1);
-        }
-      };
+      const sc = .9 + .3 * R(4), lx = (R(8) - .5) * .5, lz = (R(9) - .5) * .5;   // escala e leve inclinação do tronco
       if (type === 'oak') {
-        const T = 5 + ((R(3) * 3) | 0), top = 4 + T;
-        for (let y = 4; y < top; y++) bark(0, y, 0, [.36, .24, .14], .35);
-        for (const [dx, dz] of D4) {
-          if (R(5 + dx * 2 + dz * 3 + 9) > .4) bark(dx, 4, dz, [.3, .2, .12], .3);   // raízes
-          if (R(20 + dx + dz * 3 + 9) > .35) { bark(dx, top - 2, dz, [.33, .22, .13], .3); bark(dx * 2, top - 1, dz * 2, [.33, .22, .13], .3); } // galhos
-        }
-        const cy = top + 1, sp = [[0, cy, 0, 3.1]], nc = 3 + ((R(6) * 3) | 0);
-        for (let i = 0; i < nc; i++) sp.push([(R(10 + i) - .5) * 4.4, cy + (R(30 + i) - .3) * 2, (R(50 + i) - .5) * 4.4, 2 + R(70 + i) * 1.1]);
-        const pal = autumn ? [[.85, .38, .1], [.75, .2, .1], [.9, .65, .15], [.6, .3, .08]] : [[.22, .45, .16], [.28, .52, .18], [.18, .38, .14], [.34, .58, .2]];
-        blob(sp, top - 2, cy + 4, pal, cy - 3, cy + 3.5, .07);
+        const T = (3.4 + R(3) * 1.4) * sc, bark = [.4, .27, .17], top = 4 + T;
+        limb(cx, 4, cz, cx, 4.7, cz, .62, .44, bark, 0); limb(cx, 4.6, cz, cx + lx, top, cz + lz, .44, .3, bark, 0);
+        for (let i = 0; i < 2; i++) { const a = R(11 + i) * 6.28; limb(cx + lx * .8, top - 1, cz + lz * .8, cx + Math.cos(a) * 1.7, top + 1.1, cz + Math.sin(a) * 1.7, .2, .1, bark, 0); }
+        const pal = autumn ? [[.9, .42, .1], [.82, .26, .1], [.95, .68, .16]] : [[.26, .52, .18], [.32, .58, .2], [.22, .46, .16]], base = pal[(R(12) * pal.length) | 0];
+        const cy = top + 1.1 * sc, rr = 2.5 * sc;
+        leafBlob(cx + lx, cy, cz + lz, rr, rr * .8, rr, base, sd);
+        const nb = 3 + ((R(6) * 2) | 0);
+        for (let i = 0; i < nb; i++) { const a = (i / nb + R(20 + i) * .2) * 6.28, d = rr * (.55 + .25 * R(30 + i)), r2 = rr * (.55 + .25 * R(40 + i)); leafBlob(cx + lx + Math.cos(a) * d, cy + (R(50 + i) - .45) * 1.3 * sc, cz + lz + Math.sin(a) * d, r2, r2 * .8, r2, pal[(R(60 + i) * pal.length) | 0], sd + i + 1); }
       } else if (type === 'pine') {
-        const n = 4 + ((R(3) * 2) | 0), Rs = [3, 3, 2, 2, 1];
-        for (let y = 4; y < 6 + 2 * n; y++) bark(0, y, 0, [.28, .18, .1], .3);
-        for (let i = 0; i < n; i++) for (let l = 0; l < 2; l++) {
-          const rad = l ? Rs[i] - 1 : Rs[i], y = 6 + 2 * i + l;
-          for (let dx = -rad - 1; dx <= rad + 1; dx++) for (let dz = -rad - 1; dz <= rad + 1; dz++) {
-            if (dx * dx + dz * dz > rad * rad + 1 || (dx || dz ? R(y * 13 + dx * 7 + dz * 3 + 400) < .06 : false)) continue;
-            const sh = .7 + .5 * i / n, j = .85 + .3 * R(y * 5 + dx * 9 + dz * 13 + 500);
-            put(vox, dx, y, dz, .1 * sh * j, .3 * sh * j, .16 * sh * j, 1);
-          }
+        const n = 4 + ((R(3) * 2) | 0), bark = [.3, .2, .12];
+        limb(cx, 4, cz, cx, 4 + 3.2 * sc + n * 1.1, cz, .4, .14, bark, 0);
+        for (let i = 0; i < n; i++) {
+          const f = i / (n - 1), r = (2.5 - 1.5 * f) * sc, y0 = 4 + 1.5 * sc + i * 1.25 * sc, shade = .72 + .45 * f;
+          cone(cx, y0, cz, r, 2.5 * sc, [.1, .33, .18], sd + i * 5, shade);
         }
-        put(vox, 0, 6 + 2 * n, 0, .13, .36, .19, 1); put(vox, 0, 7 + 2 * n, 0, .15, .4, .21, 1);
       } else if (type === 'birch') {
-        const T = 6 + ((R(3) * 2) | 0), top = 4 + T;
-        for (let y = 4; y < top; y++) bark(0, y, 0, R(y * 3 + 8) > .72 ? [.14, .14, .13] : [.87, .86, .8], .12);
-        const pal = autumn ? [[.95, .8, .2], [.9, .7, .15], [.98, .88, .35]] : [[.5, .68, .22], [.58, .72, .28], [.42, .6, .2]];
-        blob([[0, top, 0, 2.3], [.4, top + 2, 0, 1.8], [-1.2, top - 1, 1, 1.6], [1.1, top - 1, -1, 1.6]], top - 3, top + 4, pal, top - 3, top + 4, .1);
+        const T = (4.6 + R(3) * 1.4) * sc, top = 4 + T, bark = [.9, .89, .84];
+        limb(cx, 4, cz, cx + lx, top, cz + lz, .3, .2, bark, 0);
+        for (let i = 0; i < 4; i++) { const y = 4.8 + i * (T - 1.2) / 4 + R(70 + i) * .5; limb(cx + lx * (y - 4) / T, y, cz + lz * (y - 4) / T, cx + lx * (y - 4) / T, y + .22, cz + lz * (y - 4) / T, .33, .31, [.14, .14, .13], 0); }
+        const pal = autumn ? [[.96, .82, .22], [.92, .72, .16]] : [[.54, .72, .26], [.46, .64, .22], [.6, .76, .3]];
+        const cy = top + .8, bc = pal[(R(12) * pal.length) | 0];
+        leafBlob(cx + lx, cy, cz + lz, 1.7 * sc, 2.2 * sc, 1.7 * sc, bc, sd);
+        leafBlob(cx + lx + 1, cy - 1.1, cz + lz - .6, 1.3 * sc, 1.5 * sc, 1.3 * sc, pal[(R(13) * pal.length) | 0], sd + 1);
+        leafBlob(cx + lx - .9, cy - .9, cz + lz + .8, 1.3 * sc, 1.5 * sc, 1.3 * sc, pal[(R(14) * pal.length) | 0], sd + 2);
       } else {
-        const T = 5 + ((R(3) * 3) | 0), top = 4 + T;
-        for (let y = 4; y < top; y++) bark(0, y, 0, [.33, .29, .26], .3);
-        const DD = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, -1], [1, -1], [-1, 1]];
-        for (let i = 0; i < 4; i++) { const [dx, dz] = DD[(R(40 + i) * 8) | 0], y0 = 6 + ((R(60 + i) * 3) | 0); for (let k = 1; k <= 3; k++) bark(dx * k, y0 + (k >> 1), dz * k, [.3, .26, .23], .3); }
-        bark(0, top, 0, [.3, .26, .23], .3);
+        const T = (4.5 + R(3) * 1.5) * sc, top = 4 + T, bark = [.36, .32, .28];
+        limb(cx, 4, cz, cx + lx, top, cz + lz, .46, .14, bark, 0);
+        for (let i = 0; i < 4; i++) { const a = R(40 + i) * 6.28, y = 4 + T * (.45 + .14 * i); limb(cx + lx * (y - 4) / T, y, cz + lz * (y - 4) / T, cx + Math.cos(a) * 1.9, y + 1.1 + R(60 + i), cz + Math.sin(a) * 1.9, .17, .05, bark, 0); }
       }
-      emitVox(tx, tz, vox);
     };
     const GP = [[.3, .55, .2], [.38, .6, .22], [.26, .48, .18]], FL = [[.95, .9, .3], [.9, .3, .4], [.95, .95, .95], [.6, .4, .9], [.95, .55, .15]];
     for (let ci = Math.floor(x0 / 3); ci <= Math.floor((x0 + CHUNK - 1) / 3); ci++) for (let cj = Math.floor(z0 / 3); cj <= Math.floor((z0 + CHUNK - 1) / 3); cj++) {
@@ -630,15 +892,79 @@ function buildChunk(cx, cz) {
       const px = ci * 3 + hash(ci * 7 + 1, cj * 13 + 5) * 3, pz = cj * 3 + hash(ci * 11 + 9, cj * 5 + 2) * 3;
       if (px < x0 + .3 || px >= x0 + CHUNK - .3 || pz < z0 + .3 || pz >= z0 + CHUNK - .3) continue;
       const ix = Math.floor(px), iz = Math.floor(pz), rr = Math.hypot(px, pz);
-      if (rr - caveEdge(Math.atan2(pz, px)) < 6.5 || Math.abs(pz) < 3.5 || (Math.abs(px) < 3.5 && pz < 0) || trunkAt(ix, iz)) continue;
+      if (rr - caveEdge(Math.atan2(pz, px)) < 6.5 || Math.abs(pz) < 3.5 || (Math.abs(px) < 3.5 && pz < 0) || trunkAt(ix, iz) || trailD(px, pz) < 4 || nearStream(px, pz, 3.5) || Math.hypot(px - VX, pz - VZ) < 38) continue;
       const k = hash(ci * 29 + 3, cj * 31 + 7), H = n => hash(ci * 41 + n * 17, cj * 43 + n * 23 + 1);
       if (k < .42) { for (let b = 0; b < 4; b++) { const bx = px + (H(b) - .5) * .6, bz = pz + (H(b + 9) - .5) * .6, h = .35 + .45 * H(b + 4), c = GP[(H(b + 20) * 3) | 0]; tb(bx, 4, bz, bx + .08, 4 + h, bz + .08, c[0], c[1], c[2], .15, -1); } }
       else if (k < .52) { const c = FL[(H(2) * 5) | 0]; tb(px - .02, 4, pz - .02, px + .02, 4.35, pz + .02, .25, .5, .18, .1, -1); tb(px - .08, 4.35, pz - .08, px + .1, 4.5, pz + .1, c[0], c[1], c[2], .1, -1); }
+      else if (k < .66) { /* arbustos e pedras do chão removidos */ }
       else if (k < .6) { const bv = new Map(), pal = fbm(ix * .02 - 40, iz * .02 + 9) > .56 ? [[.8, .3, .1], [.9, .6, .15]] : [[.2, .42, .15], [.26, .5, .17]];
         for (let dx = -1; dx <= 1; dx++) for (let dz = -1; dz <= 1; dz++) for (let dy = 0; dy < 2; dy++) { if (dx * dx + dz * dz + dy * dy * 1.3 > 2.2 || H(dx * 3 + dz * 5 + dy * 7 + 60) < .12) continue; const c = pal[(H(dx + dz * 3 + dy * 7 + 80) * pal.length) | 0], s = .75 + .3 * dy; put(bv, dx, 4 + dy, dz, c[0] * s, c[1] * s, c[2] * s, 1); }
         emitVox(ix, iz, bv); }
       else if (k < .66) { tb(px - .35, 4, pz - .3, px + .35, 4.4, pz + .3, .45, .45, .47, .25, 0); tb(px - .2, 4.4, pz - .15, px + .2, 4.65, pz + .2, .5, .5, .52, .25, 0); }
       else if (k < .7) { tb(px - .04, 4, pz - .04, px + .04, 4.25, pz + .04, .9, .88, .8, .1, 0); tb(px - .14, 4.25, pz - .14, px + .14, 4.37, pz + .14, .8, .15, .12, .1, 0); }
+    }
+    for (const L of TRAIL_PROPS) {
+      if (L.x < x0 || L.x >= x0 + CHUNK || L.z < z0 || L.z >= z0 + CHUNK) continue;
+      const wd = [.3, .2, .12], sd = L.seed | 0, Hh = n => hash(sd + n * 17, sd * 3 + n);
+      if (L.k === 'lamp') {
+        limb(L.x, 4, L.z, L.x, 6.5, L.z, .14, .1, wd, 0);
+        tb(L.x - .3, 6.4, L.z - .3, L.x + .3, 6.95, L.z + .3, 1.2, .9, .45, .04, 0);
+        tb(L.x - .4, 6.95, L.z - .4, L.x + .4, 7.1, L.z + .4, .22, .15, .1, .05, 0);
+      } else if (L.k === 'sign') {
+        limb(L.x, 4, L.z, L.x, 7, L.z, .16, .13, wd, 0);
+        tb(L.x - 1.2, 6.1, L.z - .09, L.x + .9, 6.75, L.z + .09, .62, .44, .26, .08, 0);
+        tb(L.x - .9, 5.3, L.z - .09, L.x + 1.2, 5.95, L.z + .09, .55, .38, .22, .08, 0);
+      } else if (L.k === 'arch') {
+        for (const sx of [-3.6, 3.6]) limb(L.x + sx, 4, L.z, L.x + sx, 8.3, L.z, .3, .26, wd, 0);
+        tb(L.x - 4.1, 8.0, L.z - .28, L.x + 4.1, 8.7, L.z + .28, .42, .28, .17, .06, 0);
+        tb(L.x - 1.7, 6.6, L.z - .12, L.x + 1.7, 7.5, L.z + .12, .72, .52, .3, .06, 0);
+      } else if (L.k === 'flowers') {
+        for (let i = 0; i < 9; i++) {
+          const fx = L.x + (Hh(i) - .5) * 2.6, fz = L.z + (Hh(i + 20) - .5) * 2.6, c = FL[(Hh(i + 40) * 5) | 0], g = GP[(Hh(i + 60) * 3) | 0], hh = .3 + .3 * Hh(i + 80);
+          if (i < 6) { tb(fx - .02, 4, fz - .02, fx + .02, 4 + hh, fz + .02, .25, .5, .18, .1, -1); tb(fx - .1, 4 + hh, fz - .1, fx + .1, 4.16 + hh, fz + .1, c[0], c[1], c[2], .1, -1); }
+          else tb(fx - .04, 4, fz - .04, fx + .04, 4.55 + .3 * Hh(i + 90), fz + .04, g[0], g[1], g[2], .15, -1);
+        }
+      } else if (L.k === 'fence') {
+        const px = [], rx = L.dx, rz = L.dz;
+        for (let i = 0; i < 5; i++) { const x = L.x + rx * (i * 2 - 4), z = L.z + rz * (i * 2 - 4); px.push([x, z]); limb(x, 4, z, x, 5.3, z, .11, .09, wd, 0); }
+        for (let i = 0; i < 4; i++) for (const y of [4.55, 5.0]) limb(px[i][0], y, px[i][1], px[i + 1][0], y, px[i + 1][1], .06, .06, [.36, .25, .15], 0);
+      } else if (L.k === 'cart') {
+        const x = L.x, z = L.z;
+        tb(x - 1.2, 4.45, z - .7, x + 1.2, 5.05, z + .7, .5, .34, .2, .06, 0);
+        tb(x - 1.0, 5.05, z - .55, x + 1.0, 5.6, z + .55, .92, .76, .3, .12, 0);
+        for (const wx of [-.75, .75]) for (const wz of [-.8, .8]) limb(x + wx, 4.5, z + wz, x + wx, 4.5, z + wz + (wz > 0 ? .1 : -.1), .5, .5, [.28, .19, .11], 0);
+        tb(x + 1.7, 4, z - .5, x + 2.7, 4.8, z + .5, .9, .74, .3, .12, 0);
+        tb(x + 1.9, 4.8, z - .35, x + 2.5, 5.3, z + .3, .88, .72, .28, .12, 0);
+      } else if (L.k === 'camp') {
+        const x = L.x, z = L.z;
+        for (let i = 0; i < 4; i++) { const a = i * 1.57 + .4; limb(x + Math.cos(a) * .7, 4, z + Math.sin(a) * .7, x, 4.8, z, .12, .08, [.3, .2, .12], 0); }
+        cone(x, 4.1, z, .5, 1.3, [1.5, .6, .1], sd, 1); cone(x, 4.15, z, .28, 1.0, [1.7, 1.2, .3], sd + 3, 1);
+        for (let i = 0; i < 3; i++) { const a = i * 2.1 + .6 + Hh(i) * .5; limb(x + Math.cos(a) * 2.3 - Math.sin(a) * 1.0, 4.35, z + Math.sin(a) * 2.3 + Math.cos(a) * 1.0, x + Math.cos(a) * 2.3 + Math.sin(a) * 1.0, 4.35, z + Math.sin(a) * 2.3 - Math.cos(a) * 1.0, .3, .3, [.4, .28, .17], 0); }
+      } else if (L.k === 'stump') {
+        limb(L.x, 4, L.z, L.x, 4.75, L.z, .55, .46, [.42, .3, .18], 0);
+        tb(L.x - .42, 4.7, L.z - .42, L.x + .42, 4.78, L.z + .42, .72, .56, .36, .1, 0);
+      } else if (L.k === 'log') {
+        const a = Hh(1) * 3.14, ex = Math.cos(a) * 1.6, ez = Math.sin(a) * 1.6;
+        limb(L.x - ex, 4.4, L.z - ez, L.x + ex, 4.4, L.z + ez, .42, .42, [.38, .27, .16], 0);
+      } else if (L.k === 'bridge') {
+        for (const sx of [-2.6, 2.6]) { limb(L.x + sx, 5.1, L.z - 3.2, L.x + sx, 5.1, L.z + 3.2, .07, .07, [.4, .28, .17], 0); limb(L.x + sx, 4.65, L.z - 3.2, L.x + sx, 4.65, L.z + 3.2, .06, .06, [.4, .28, .17], 0); for (const dz of [-3.2, 0, 3.2]) limb(L.x + sx, 4, L.z + dz, L.x + sx, 5.3, L.z + dz, .12, .1, wd, 0); }
+      }
+    }
+    for (let i = 0; i < CHUNK; i++) for (let j = 0; j < CHUNK; j++) {   // vitórias-régias na água, taboas e juncos nas margens
+      const h = H(i, j); if (h !== 3 && h !== 4) continue;
+      const wx = x0 + i, wz = z0 + j, r = n => hash(wx * 19 + n * 7, wz * 23 + n * 3);
+      if (h === 3) {
+        if (r(1) > .9) { const cx = wx + .5 + (r(4) - .5) * .5, cz = wz + .5 + (r(5) - .5) * .5; cone(cx, 3.73, cz, .4 + .12 * r(6), .03, [.2, .5, .2], wx * 7 + wz, 1); if (r(7) > .6) tb(cx - .07, 3.76, cz - .07, cx + .07, 3.92, cz + .07, 1, .62, .78, .05, 0); }
+        continue;
+      }
+      if (streamH(wx, wz) !== 0 || trailD(wx + .5, wz + .5) < 2.6 || r(2) > .55) continue;
+      if (H(i + 1, j) !== 3 && H(i - 1, j) !== 3 && H(i, j + 1) !== 3 && H(i, j - 1) !== 3) continue;
+      const ns = 3 + ((r(3) * 3) | 0);
+      for (let k = 0; k < ns; k++) {
+        const sx = wx + .15 + r(10 + k) * .7, sz = wz + .15 + r(20 + k) * .7, hh = 1 + r(30 + k) * .9;
+        tb(sx - .025, 4, sz - .025, sx + .025, 4 + hh, sz + .025, .3, .5, .2, .12, -1);
+        if (r(40 + k) > .5) tb(sx - .05, 4 + hh - .05, sz - .05, sx + .05, 4 + hh + .35, sz + .05, .32, .2, .1, .1, -1);
+      }
     }
     if (TI.length) {
       const tg = new THREE.BufferGeometry();
@@ -874,7 +1200,7 @@ const SFX = (() => {
     toggle() {
       muted = !muted; icon();
       if (master) master.gain.setTargetAtTime(muted ? 0 : .55 * settings.vol / 100, ctx.currentTime, .05);
-      try { localStorage.setItem('ashenfall-mute', muted ? '1' : '0'); } catch (e) {}
+      try { localStorage.setItem('ashenfall-mute', muted ? '1' : '0'); } catch (e) {} if (window.cloudDirty) window.cloudDirty();
     },
     swing(k) { // k: 0/1 cortes, 2 golpe pesado, 3 giro aéreo
       if (k === 2) { noise({ f0: vr(250), f1: 1100, dur: .34, vol: .5, att: .08, q: .8, rev: .2 }); tone({ f0: 140, f1: 65, dur: .3, vol: .24 }); noise({ type: 'highpass', f0: 2500, dur: .12, vol: .1, att: .05, delay: .05 }); }
@@ -1293,7 +1619,36 @@ for (let k = 0; k < 12; k++) {
   }
 }
 const msgEl = document.getElementById('msg'); let msgA = 0, bumpCD = 0, gateFlash = 0;
+const PATCHES = TRAIL_PROPS.filter(p => p.k === 'flowers'), BF = [], BF_COL = [0xffd23c, 0xff7aa8, 0xffffff, 0x7ab8ff, 0xff9a3c];
+{
+  const wg = new THREE.PlaneGeometry(.42, .32).rotateX(-Math.PI / 2).translate(.21, 0, 0);
+  for (let i = 0; i < 9; i++) {
+    const g = new THREE.Group(), mat = new THREE.MeshBasicMaterial({ color: BF_COL[i % BF_COL.length], side: THREE.DoubleSide });
+    const w1 = new THREE.Mesh(wg, mat), w2 = new THREE.Mesh(wg, mat); w2.scale.x = -1; w1.frustumCulled = w2.frustumCulled = false;
+    g.add(w1, w2); g.visible = false; scene.add(g); BF.push({ g, w1, w2, p: null, ph: i * 1.7 });
+  }
+}
+function updateButterflies() {
+  for (const b of BF) {
+    if (b.p && Math.hypot(b.p.x - pos.x, b.p.z - pos.z) > 42) b.p = null;
+    if (!b.p) { const c = PATCHES.filter(p => Math.hypot(p.x - pos.x, p.z - pos.z) < 32 && !BF.some(o => o.p === p)); b.p = c.length ? c[(Math.random() * c.length) | 0] : null; }
+    b.g.visible = !!b.p; if (!b.p) continue;
+    const a = t * .8 + b.ph, f = .2 + Math.sin(t * 22 + b.ph * 3) * .9;
+    b.g.position.set(b.p.x + Math.sin(a) * 1.8 + Math.sin(a * 2.3) * .6, 5.3 + Math.sin(t * 2.1 + b.ph) * .45, b.p.z + Math.cos(a * 1.1) * 1.8);
+    b.g.rotation.y = a; b.w1.rotation.z = f; b.w2.rotation.z = f;
+  }
+}
+const trailHud = document.createElement('div');
+trailHud.style.cssText = 'position:fixed;bottom:14px;left:50%;transform:translateX(-50%);padding:4px 12px;border-radius:12px;background:rgba(0,0,0,.45);color:#f3e6c8;font:600 13px system-ui,sans-serif;z-index:5;pointer-events:none;display:none';
+document.body.appendChild(trailHud);
 function updateProps(dt) {
+  waterU.uTime.value = t; updateButterflies();
+  if (active && gateOn) {
+    const dv = Math.hypot(pos.x - VX, pos.z - VZ);
+    if (!trailSeen && pos.z < GATE_Z - 6) { trailSeen = true; banner('TRILHA PARA A VILA', 'Siga o caminho de terra ao norte'); }
+    if (!villageSeen && dv < 28) { villageSeen = true; banner('VILA ALVORADA', 'Você chegou ao fim da trilha'); }
+    if (villageSeen) trailHud.style.display = 'none'; else { trailHud.style.display = 'block'; trailHud.textContent = '🏘️ Vila Alvorada · ' + Math.round(dv) + ' m'; }
+  } else trailHud.style.display = 'none';
   for (const f of FLAMES) {
     const k = .8 + .2 * Math.sin(t * 11 + f.ph) + .1 * Math.sin(t * 23 + f.ph * 2);
     f.m.scale.set(1, k * 1.1, 1); f.core.scale.set(1, k, 1); f.g.material.opacity = .27 * k; if (f.L) f.L.intensity = f.I * k;
@@ -1308,7 +1663,7 @@ function updateProps(dt) {
   }
   if (active && hasKey && !gateOn && pos.z < GATE_Z + 8 && pos.z > GATE_Z - 1 && Math.abs(pos.x) < GATE_X + 1) { // chegou perto: a runa se parte e as grades sobem
     gateOn = true; gateFlash = 1.5; shake = Math.max(shake, .35); SFX.hit('H');
-    msgEl.innerHTML = '🔓 PORTÃO ABERTO<br><span>A saída leva para fora</span>';
+    msgEl.innerHTML = '🔓 PORTÃO ABERTO<br><span>Siga a trilha até a vila</span>';
   }
   if (gateOn && gateP < 1) {
     gateP = Math.min(1, gateP + dt * .55); const e = gateP * gateP * (3 - 2 * gateP);
@@ -2268,53 +2623,127 @@ armL.name = 'armL'; armR.name = 'armR'; legL.name = 'legL'; legR.name = 'legR';
 cseg.forEach((g, i) => g.name = 'cseg' + i); sword.name = 'sword'; swGear[0].name = 'scab'; swGear[1].name = 'strap';
 const NODE_NAMES = ['body', 'upper', 'head', 'armL', 'armR', 'legL', 'legR', 'cseg0', 'cseg1', 'cseg2', 'sword', 'scab', 'strap'];
 // papéis de cor: cada peça colorida do herói recebe um papel (pela cor original) para a skin poder recolorir
-const ROLE = { 0x8a3b2e: 'tunic', 0x6e2d23: 'tunicD', 0x8d939b: 'mail', 0x5a3d28: 'leather', 0x3a2819: 'leatherD', 0x5b4a3a: 'pants', 0xe3b48f: 'skin', 0xc99673: 'skinD', 0x4a3020: 'hair' };
+const ROLE = { 0x8a3b2e: 'tunic', 0x6e2d23: 'tunicD', 0x8d939b: 'mail', 0x5a3d28: 'leather', 0x3a2819: 'leatherD', 0x5b4a3a: 'pants', 0xe3b48f: 'skin', 0xc99673: 'skinD', 0x4a3020: 'hair', 0x2a1d14: 'eyes' };
 hero.traverse(o => { if (o.isMesh && o.material && o.material.isMeshLambertMaterial) { const r = ROLE[o.material.color.getHex()]; if (r) o.userData.role = r; } });
+// tipo de cada peça de cabelo (para os estilos de cabelo poderem esconder/trocar partes)
+mask.traverse(o => {
+  if (o.isMesh && o.userData.role === 'hair' && o.geometry && o.geometry.parameters) {
+    const q = o.geometry.parameters;
+    o.userData.hp = q.depth > .25 && q.width < .1 ? 'side' : q.width < .12 ? 'brow' : q.height > .25 ? 'back' : q.height < .08 ? 'fringe' : 'top';
+  }
+});
 const TPL = hero.clone(true); // molde limpo para jogadores remotos e prévia
 
 /* ---------- Skin ---------- */
-const DEF_SKIN = { tunic: '#8a3b2e', mail: '#8d939b', pants: '#5b4a3a', leather: '#5a3d28', hair: '#4a3020', skin: '#e3b48f', cape: '#3a2a7a', acc: '#c9b27a', capeOn: false, head: 'none' };
-const HEADS = [['none', 'Nenhum'], ['helm', 'Elmo'], ['crown', 'Coroa'], ['hat', 'Chapéu de mago'], ['horns', 'Chifres']];
-const SKIN_KEYS = ['tunic', 'mail', 'pants', 'leather', 'hair', 'skin', 'cape', 'acc'];
+const DEF_SKIN = { tunic: '#8a3b2e', mail: '#8d939b', pants: '#5b4a3a', leather: '#5a3d28', hair: '#4a3020', skin: '#e3b48f', cape: '#3a2a7a', acc: '#c9b27a', eyes: '#2a1d14', capeOn: false, head: 'none', hairStyle: 'default', beard: 'none', face: 'none', capeStyle: 'short', capeTrim: false, shoulders: 'none' };
+const HEADS = [['none', 'Nenhum'], ['helm', 'Elmo'], ['crown', 'Coroa'], ['hat', 'Chapéu de mago'], ['horns', 'Chifres'], ['hood', 'Capuz'], ['viking', 'Elmo viking'], ['bandana', 'Testeira'], ['circlet', 'Diadema']];
+const HAIRS = [['default', 'Padrão'], ['short', 'Curto'], ['long', 'Longo'], ['ponytail', 'Rabo de cavalo'], ['spiky', 'Espetado'], ['mohawk', 'Moicano'], ['bald', 'Careca']];
+const BEARDS = [['none', 'Nenhuma'], ['mustache', 'Bigode'], ['goatee', 'Cavanhaque'], ['full', 'Cheia']];
+const FACES = [['none', 'Nenhum'], ['eyepatch', 'Tapa-olho'], ['glasses', 'Óculos'], ['bandana', 'Máscara'], ['scar', 'Cicatriz']];
+const CAPES = [['short', 'Curta'], ['long', 'Longa'], ['wide', 'Larga']];
+const SHOULDERS = [['none', 'Nenhuma'], ['plate', 'Placas'], ['spikes', 'Espinhos']];
+const SKIN_KEYS = ['tunic', 'mail', 'pants', 'leather', 'hair', 'skin', 'cape', 'acc', 'eyes'];
+const inList = (L, v, d) => L.some(h => h[0] === v) ? v : d;
 function sanitizeSkin(o) {
   const s = Object.assign({}, DEF_SKIN);
   if (o && typeof o === 'object') {
     for (const k of SKIN_KEYS) if (typeof o[k] === 'string' && /^#[0-9a-fA-F]{6}$/.test(o[k])) s[k] = o[k].toLowerCase();
-    s.capeOn = o.capeOn === true; s.head = HEADS.some(h => h[0] === o.head) ? o.head : 'none';
+    s.capeOn = o.capeOn === true; s.head = inList(HEADS, o.head, 'none');
+    s.hairStyle = inList(HAIRS, o.hairStyle, 'default'); s.beard = inList(BEARDS, o.beard, 'none'); s.face = inList(FACES, o.face, 'none');
+    s.capeStyle = inList(CAPES, o.capeStyle, 'short'); s.capeTrim = o.capeTrim === true; s.shoulders = inList(SHOULDERS, o.shoulders, 'none');
   }
   return s;
 }
 let mySkin = sanitizeSkin(LS.get('ashenfall-skin', {}));
 function skinColors(sk) {
-  const s = shadeHex, c = k => hx(sk[k]);
-  return { tunic: c('tunic'), tunicD: s(sk.tunic, .78), mail: c('mail'), leather: c('leather'), leatherD: s(sk.leather, .7), pants: c('pants'), skin: c('skin'), skinD: s(sk.skin, .88), hair: c('hair'), cape: c('cape'), capeD: s(sk.cape, .8), acc: c('acc'), accL: s(sk.acc, 1.3) };
+  const s = shadeHex, c = k => hx(sk[k] || DEF_SKIN[k]);
+  return { tunic: c('tunic'), tunicD: s(sk.tunic || DEF_SKIN.tunic, .78), mail: c('mail'), leather: c('leather'), leatherD: s(sk.leather || DEF_SKIN.leather, .7), pants: c('pants'), skin: c('skin'), skinD: s(sk.skin || DEF_SKIN.skin, .88), hair: c('hair'), cape: c('cape'), capeD: s(sk.cape || DEF_SKIN.cape, .8), acc: c('acc'), accL: s(sk.acc || DEF_SKIN.acc, 1.3), eyes: c('eyes'), bone: 0xe8dcc0, dark: 0x15121a, scar: s(sk.skin || DEF_SKIN.skin, .7) };
 }
 function gearPart(g, w, h, d, x, y, z, role) { const m = part(w, h, d, 0xffffff); m.position.set(x, y, z); m.userData.role = role || 'acc'; g.add(m); return m; }
+function clearNamed(parent, name) { const old = parent.getObjectByName(name); if (old) { old.parent.remove(old); disposeTree(old); } }
+function newGroup(parent, name) { const g = new THREE.Group(); g.name = name; parent.add(g); return g; }
+// quais peças do cabelo original ficam visíveis em cada estilo (sobrancelhas sempre aparecem)
+const HAIRVIS = { default: ['top', 'back', 'fringe', 'side'], short: ['top', 'back'], long: ['top', 'back', 'fringe', 'side'], ponytail: ['top', 'back', 'fringe', 'side'], spiky: ['top', 'back', 'side'], mohawk: [], bald: [] };
+const GEAR_COVER = ['helm', 'hood', 'viking', 'hat']; // cobrem o topo da cabeça: sem cristas/espetos de cabelo
 function buildGear(root, sk) {
   const mk = root.getObjectByName('mask');
-  const old = mk.getObjectByName('acc'); if (old) { mk.remove(old); disposeTree(old); }
-  if (sk.head !== 'none') {
-    const g = new THREE.Group(); g.name = 'acc'; mk.add(g);
+  const hd = sk.head || 'none', hs = sk.hairStyle || 'default', bd = sk.beard || 'none', fc = sk.face || 'none', sh = sk.shoulders || 'none';
+  const covered = GEAR_COVER.includes(hd);
+  // cabelo: visibilidade das peças originais + peças extras do estilo
+  const vis = HAIRVIS[hs] || HAIRVIS.default;
+  mk.traverse(o => { const t = o.userData.hp; if (t) o.visible = t === 'brow' || vis.includes(t); });
+  clearNamed(mk, 'hairX'); clearNamed(mk, 'faceX'); clearNamed(mk, 'acc');
+  const hg = newGroup(mk, 'hairX'), fg = newGroup(mk, 'faceX');
+  const H = (w, h, d, x, y, z) => gearPart(hg, w, h, d, x, y, z, 'hair');
+  const F = (w, h, d, x, y, z, r) => gearPart(fg, w, h, d, x, y, z, r);
+  if (hs === 'long') { H(.46, .5, .1, 0, 1.65, -.225); for (const sd of [-1, 1]) H(.06, .36, .2, sd * .22, 1.72, -.1); }
+  else if (hs === 'ponytail') { H(.12, .12, .12, 0, 1.9, -.28); H(.14, .14, .12, 0, 1.77, -.33); H(.12, .22, .1, 0, 1.56, -.35); H(.08, .16, .08, 0, 1.4, -.36); }
+  else if (hs === 'spiky' && !covered) { for (const [x, z, h] of [[-.15, -.12, .14], [0, -.12, .2], [.15, -.12, .14], [-.15, .08, .12], [.15, .08, .12], [0, .1, .16]]) H(.1, h, .1, x, 2.01 + h / 2, z); }
+  else if (hs === 'mohawk' && !covered) { H(.1, .1, .46, 0, 2.03, 0); H(.1, .1, .34, 0, 2.13, -.03); H(.08, .08, .2, 0, 2.22, -.06); H(.1, .28, .08, 0, 1.84, -.23); }
+  // barba
+  if (fc !== 'bandana') {
+    if (bd === 'mustache') F(.24, .045, .04, 0, 1.7, .225, 'hair');
+    else if (bd === 'goatee') { F(.24, .045, .04, 0, 1.7, .225, 'hair'); F(.14, .12, .05, 0, 1.6, .212, 'hair'); }
+    else if (bd === 'full') { F(.24, .045, .04, 0, 1.7, .225, 'hair'); F(.44, .1, .06, 0, 1.6, .205, 'hair'); for (const sd of [-1, 1]) F(.06, .16, .3, sd * .215, 1.63, .03, 'hair'); }
+  }
+  // rosto
+  if (fc === 'eyepatch') { F(.15, .13, .03, -.1, 1.79, .232, 'dark'); F(.03, .03, .2, -.215, 1.83, .11, 'dark'); }
+  else if (fc === 'glasses') {
+    for (const sd of [-1, 1]) { const x0 = sd * .1; F(.15, .02, .025, x0, 1.845, .236, 'acc'); F(.15, .02, .025, x0, 1.735, .236, 'acc'); F(.02, .12, .025, x0 + sd * .075, 1.79, .236, 'acc'); F(.02, .12, .025, x0 - sd * .075, 1.79, .236, 'acc'); F(.02, .02, .2, sd * .22, 1.815, .11, 'acc'); }
+    F(.04, .02, .025, 0, 1.8, .236, 'acc');
+  }
+  else if (fc === 'bandana') { F(.46, .17, .46, 0, 1.645, 0, 'acc'); F(.1, .1, .06, 0, 1.66, -.26, 'acc'); for (const sd of [-1, 1]) F(.05, .14, .04, sd * .04, 1.55, -.28, 'accL'); }
+  else if (fc === 'scar') { F(.025, .15, .012, .15, 1.69, .222, 'scar'); F(.07, .02, .012, .15, 1.69, .222, 'scar'); }
+  // acessório de cabeça
+  if (hd !== 'none') {
+    const g = newGroup(mk, 'acc');
     const P = (w, h, d, x, y, z, r) => gearPart(g, w, h, d, x, y, z, r);
-    if (sk.head === 'helm') {
+    if (hd === 'helm') {
       P(.5, .24, .5, 0, 1.98, 0); P(.5, .05, .53, 0, 1.905, 0, 'accL'); P(.06, .2, .04, 0, 1.77, .235);
       for (const sd of [-1, 1]) P(.05, .26, .34, sd * .235, 1.77, -.02);
       P(.06, .12, .36, 0, 2.13, 0, 'accL');
-    } else if (sk.head === 'crown') {
+    } else if (hd === 'crown') {
       P(.5, .09, .5, 0, 2.06, 0); P(.06, .06, .03, 0, 2.06, .255, 'accL');
       for (const [x, z] of [[-.2, -.2], [.2, -.2], [-.2, .2], [.2, .2], [0, .22], [0, -.22], [-.23, 0], [.23, 0]]) P(.07, .14, .07, x, 2.17, z, 'accL');
-    } else if (sk.head === 'hat') {
+    } else if (hd === 'hat') {
       P(.95, .05, .95, 0, 2.05, 0); P(.58, .07, .58, 0, 2.1, 0, 'accL'); P(.55, .3, .55, 0, 2.22, 0); P(.4, .28, .4, 0, 2.5, .03); P(.26, .26, .26, 0, 2.74, .08); P(.14, .22, .14, 0, 2.96, .16);
-    } else if (sk.head === 'horns') {
+    } else if (hd === 'horns') {
       for (const sd of [-1, 1]) { P(.1, .14, .1, sd * .2, 2.03, 0); P(.08, .16, .08, sd * .27, 2.15, 0); P(.06, .16, .06, sd * .33, 2.29, 0); P(.05, .12, .05, sd * .37, 2.41, 0); }
+    } else if (hd === 'hood') { // capuz: usa as cores da capa
+      P(.5, .1, .52, 0, 2.01, -.02, 'cape'); P(.5, .46, .1, 0, 1.77, -.24, 'capeD'); P(.5, .06, .1, 0, 1.955, .215, 'capeD');
+      for (const sd of [-1, 1]) P(.08, .4, .42, sd * .255, 1.78, -.03, 'cape');
+    } else if (hd === 'viking') {
+      P(.5, .2, .5, 0, 2.0, 0); P(.52, .04, .52, 0, 1.905, 0, 'accL'); P(.06, .2, .04, 0, 1.8, .235, 'accL');
+      for (const sd of [-1, 1]) { P(.1, .12, .1, sd * .29, 1.98, 0, 'bone'); P(.09, .14, .09, sd * .35, 2.09, 0, 'bone'); P(.08, .14, .08, sd * .4, 2.21, 0, 'bone'); P(.06, .12, .06, sd * .38, 2.32, 0, 'bone'); }
+    } else if (hd === 'bandana') {
+      P(.5, .07, .5, 0, 1.9, 0); P(.1, .12, .08, 0, 1.88, -.28); for (const sd of [-1, 1]) P(.05, .16, .04, sd * .05, 1.77, -.3, 'accL');
+    } else if (hd === 'circlet') {
+      P(.48, .04, .48, 0, 1.94, 0); P(.07, .09, .03, 0, 1.945, .245, 'cape'); P(.04, .06, .03, -.12, 1.95, .245, 'accL'); P(.04, .06, .03, .12, 1.95, .245, 'accL');
     }
   }
-  for (let i = 0; i < 3; i++) { const seg = root.getObjectByName('cseg' + i), c = seg.getObjectByName('capeG'); if (c) { seg.remove(c); disposeTree(c); } }
+  // capa
+  for (let i = 0; i < 3; i++) { const seg = root.getObjectByName('cseg' + i); for (const c of seg.children.slice()) if (c.name === 'capeG') { seg.remove(c); disposeTree(c); } } // só filhos diretos: os segmentos da capa são aninhados
   const cl = root.getObjectByName('cloak'), m0 = cl.getObjectByName('mantle'); if (m0) { cl.remove(m0); disposeTree(m0); }
   if (sk.capeOn) {
-    const W = [.46, .54, .62];
-    for (let i = 0; i < 3; i++) { const cg = new THREE.Group(); cg.name = 'capeG'; root.getObjectByName('cseg' + i).add(cg); gearPart(cg, W[i], .32, .05, 0, -.15, 0, i === 2 ? 'capeD' : 'cape'); }
-    const mg = new THREE.Group(); mg.name = 'mantle'; cl.add(mg); gearPart(mg, .6, .08, .3, 0, 0, .1, 'capeD');
+    const cs = sk.capeStyle || 'short';
+    const W = cs === 'wide' ? [.56, .72, .9] : [.46, .54, .62], HH = cs === 'long' ? [.32, .32, .52] : [.32, .32, .32];
+    for (let i = 0; i < 3; i++) {
+      const cg = new THREE.Group(); cg.name = 'capeG'; root.getObjectByName('cseg' + i).add(cg);
+      gearPart(cg, W[i], HH[i], .05, 0, -HH[i] / 2 + .01, 0, i === 2 ? 'capeD' : 'cape');
+      if (i === 2 && sk.capeTrim) gearPart(cg, W[i] + .02, .06, .06, 0, -HH[i] + .04, 0, 'accL');
+    }
+    const mg = new THREE.Group(); mg.name = 'mantle'; cl.add(mg); gearPart(mg, cs === 'wide' ? .76 : .6, .08, .3, 0, 0, .1, 'capeD');
+  }
+  // ombreiras
+  for (const [nm, sd] of [['armL', -1], ['armR', 1]]) {
+    const arm = root.getObjectByName(nm); clearNamed(arm, 'pauld');
+    if (sh === 'none') continue;
+    const g = newGroup(arm, 'pauld'), Q = (w, h, d, x, y, z, r) => gearPart(g, w, h, d, x, y, z, r);
+    if (sh === 'plate') { Q(.28, .07, .3, sd * .04, .035, 0, 'mail'); Q(.06, .2, .28, sd * .15, -.03, 0, 'mail'); Q(.3, .025, .32, sd * .04, 0, 0, 'accL'); }
+    else if (sh === 'spikes') {
+      Q(.28, .07, .3, sd * .04, .035, 0, 'leather');
+      for (const [x, z, h] of [[.04, 0, .16], [.13, .09, .12], [.13, -.09, .12]]) Q(.06, h, .06, sd * x, .06 + h / 2, z, 'accL');
+    }
   }
 }
 function applyColors(root, sk) {
@@ -2337,6 +2766,7 @@ function disposeAvatar(av) {
 }
 
 /* ---------- Prévia 3D da skin ---------- */
+let skTab = 'presets';
 const prev = { on: false, r: null };
 function ensurePreview() {
   if (prev.r) return true;
@@ -2347,10 +2777,11 @@ function ensurePreview() {
     sc.add(new THREE.HemisphereLight(0xffffff, 0x6a5a4a, .95));
     const dl = new THREE.DirectionalLight(0xffe2c0, .75); dl.position.set(3, 5, 4); sc.add(dl);
     const cam = new THREE.PerspectiveCamera(30, 1, .1, 50), av = makeAvatar(mySkin); sc.add(av.root);
-    Object.assign(prev, { r, sc, cam, av, yaw: .6, w: 0, h: 0, drag: false, lx: 0, t: 0 });
+    Object.assign(prev, { r, sc, cam, av, yaw: .6, w: 0, h: 0, drag: false, lx: 0, t: 0, auto: true, zoom: 1, fy: skTab === 'head' ? 2.0 : 1.0, fz: skTab === 'head' ? 3.8 : 6.2, ty: skTab === 'head' ? 2.0 : 1.0, tz: skTab === 'head' ? 3.8 : 6.2 });
     cv.addEventListener('pointerdown', e => { prev.drag = true; prev.lx = e.clientX; try { cv.setPointerCapture(e.pointerId); } catch (_) {} });
     cv.addEventListener('pointermove', e => { if (prev.drag) { prev.yaw += (e.clientX - prev.lx) * .012; prev.lx = e.clientX; } });
     const up = () => { prev.drag = false; }; cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
+    cv.addEventListener('wheel', e => { e.preventDefault(); prev.zoom = clamp(prev.zoom * (1 + Math.sign(e.deltaY) * .08), .55, 1.4); }, { passive: false });
     return true;
   } catch (e) { return false; }
 }
@@ -2359,13 +2790,14 @@ function previewUpdate(dt) {
   const cv = prev.r.domElement, w = cv.clientWidth, h = cv.clientHeight;
   if (!w || !h) return;
   if (w !== prev.w || h !== prev.h) { prev.w = w; prev.h = h; prev.r.setSize(w, h, false); prev.cam.aspect = w / h; prev.cam.updateProjectionMatrix(); }
-  prev.t += dt; if (!prev.drag) prev.yaw += dt * .6;
+  prev.t += dt; if (!prev.drag && prev.auto) prev.yaw += dt * .6;
   const N = prev.av.N, tt = prev.t;
   prev.av.root.rotation.y = prev.yaw;
   N.armL.rotation.x = Math.sin(tt * 1.6) * .04; N.armR.rotation.x = -Math.sin(tt * 1.6) * .04; N.armL.rotation.z = -.05; N.armR.rotation.z = .05;
   N.body.position.y = Math.sin(tt * 2.2) * .012; N.head.rotation.y = Math.sin(tt * .8) * .18;
   for (let i = 0; i < 3; i++) N['cseg' + i].rotation.x = .1 + Math.sin(tt * 1.4 + i) * .05;
-  prev.cam.position.set(0, 1.3, 6.2); prev.cam.lookAt(0, 1.0, 0);
+  const kf = 1 - Math.exp(-dt * 7); prev.fy += (prev.ty - prev.fy) * kf; prev.fz += (prev.tz - prev.fz) * kf;
+  prev.cam.position.set(0, prev.fy + .3, prev.fz * prev.zoom); prev.cam.lookAt(0, prev.fy, 0);
   prev.r.render(prev.sc, prev.cam);
 }
 
@@ -2379,9 +2811,14 @@ function mkSeg(el, opts, get, set) {
 }
 let mpMetaT = 0;
 function mpTrackMeta() { clearTimeout(mpMetaT); mpMetaT = setTimeout(() => { if (mp.on && mp.ch) { try { const r = mp.ch.track({ id: mp.id, name: settings.name, skin: mySkin }); if (r && r.catch) r.catch(() => {}); } catch (e) {} } }, 400); }
-function skinChanged() {
+const skHist = [JSON.stringify(mySkin)]; let skHistT = 0;
+function skinChanged(noHist) {
   LS.set('ashenfall-skin', mySkin);
   setLook(hero, mySkin); if (prev.r) setLook(prev.av.m, mySkin);
+  if (noHist !== true) { // histórico para "Desfazer" (mudanças em sequência rápida, como arrastar o seletor de cor, viram um passo só)
+    const j = JSON.stringify(mySkin), now = Date.now();
+    if (j !== skHist[skHist.length - 1]) { if (now - skHistT < 700 && skHist.length > 1) skHist[skHist.length - 1] = j; else skHist.push(j); if (skHist.length > 40) skHist.shift(); skHistT = now; }
+  }
   refreshSkinUI(); mpTrackMeta();
 }
 const PARTS = [
@@ -2389,10 +2826,11 @@ const PARTS = [
   ['mail', 'Armadura', ['#8d939b', '#b9c0c9', '#c9a23a', '#3a3a46', '#6d7a4a', '#a8d4f0', '#7a4a2a', '#d8d8e0']],
   ['pants', 'Calça', ['#5b4a3a', '#3a3d45', '#15151b', '#2a3a5a', '#4a5a2a', '#7a6a50', '#e8eef5', '#5a1e1e']],
   ['leather', 'Botas e couro', ['#5a3d28', '#2a2a2e', '#111111', '#7a5a38', '#3b2a1a', '#8a1a1a', '#8aa4bf', '#4a2a14']],
-  ['hair', 'Cabelo', ['#4a3020', '#111111', '#8a5a2a', '#d8b04a', '#c8c8d0', '#f0f4ff', '#8a2a1a', '#2a4a7a']],
+  ['hair', 'Cabelo e barba', ['#4a3020', '#111111', '#8a5a2a', '#d8b04a', '#c8c8d0', '#f0f4ff', '#8a2a1a', '#2a4a7a']],
   ['skin', 'Pele', ['#f6d9c2', '#e3b48f', '#d9a37a', '#b9805a', '#8a5a3a', '#6a4028', '#a83a2a', '#cfd8c0']],
-  ['cape', 'Capa', ['#3a2a7a', '#7a1f1f', '#22222c', '#264a30', '#e8eef5', '#8a1a2a', '#c7a23a', '#2f5d8a']],
-  ['acc', 'Acessório', ['#c9b27a', '#e0b840', '#b9c0c9', '#5a3aaa', '#d8d0c0', '#44445a', '#8a6a44', '#a83a2a']]
+  ['eyes', 'Olhos', ['#2a1d14', '#2f5d8a', '#2e6b3a', '#6a3a1a', '#7a3aaa', '#a83a2a', '#c9a23a', '#3a3a46']],
+  ['cape', 'Capa e capuz', ['#3a2a7a', '#7a1f1f', '#22222c', '#264a30', '#e8eef5', '#8a1a2a', '#c7a23a', '#2f5d8a']],
+  ['acc', 'Acessórios', ['#c9b27a', '#e0b840', '#b9c0c9', '#5a3aaa', '#d8d0c0', '#44445a', '#8a6a44', '#a83a2a']]
 ];
 const PRESETS = [
   { n: 'Clássico', ...DEF_SKIN },
@@ -2401,9 +2839,56 @@ const PRESETS = [
   { n: 'Guardião da Floresta', tunic: '#2f5d3a', mail: '#6d7a4a', pants: '#4a3a2a', leather: '#3b2a1a', hair: '#8a5a2a', skin: '#d9a37a', cape: '#264a30', acc: '#8a6a44', capeOn: true, head: 'none' },
   { n: 'Rei das Cinzas', tunic: '#5a1e6a', mail: '#c9a23a', pants: '#2a1a3a', leather: '#4a2a14', hair: '#111111', skin: '#8a5a3a', cape: '#8a1a2a', acc: '#e0b840', capeOn: true, head: 'crown' },
   { n: 'Mago do Gelo', tunic: '#2f5d8a', mail: '#a8d4f0', pants: '#e8eef5', leather: '#8aa4bf', hair: '#f0f4ff', skin: '#f6d9c2', cape: '#e8eef5', acc: '#5a3aaa', capeOn: true, head: 'hat' },
-  { n: 'Demônio', tunic: '#5a1e1e', mail: '#2a2a30', pants: '#15151b', leather: '#111111', hair: '#111111', skin: '#a83a2a', cape: '#22222c', acc: '#d8d0c0', capeOn: false, head: 'horns' }
+  { n: 'Demônio', tunic: '#5a1e1e', mail: '#2a2a30', pants: '#15151b', leather: '#111111', hair: '#111111', skin: '#a83a2a', cape: '#22222c', acc: '#d8d0c0', capeOn: false, head: 'horns' },
+  { n: 'Bárbaro do Norte', tunic: '#5a3d28', mail: '#8d939b', pants: '#3b2a1a', leather: '#3a2819', hair: '#8a2a1a', skin: '#d9a37a', cape: '#3a3d45', acc: '#b9c0c9', eyes: '#2f5d8a', capeOn: true, head: 'viking', hairStyle: 'long', beard: 'full', shoulders: 'plate' },
+  { n: 'Ladino', tunic: '#26303a', mail: '#3a3a46', pants: '#15151b', leather: '#111111', hair: '#2a1c12', skin: '#cfa88c', cape: '#1c2a24', acc: '#44445a', eyes: '#2e6b3a', capeOn: true, head: 'hood', hairStyle: 'short', face: 'bandana', capeStyle: 'long' },
+  { n: 'Pirata', tunic: '#e8e4dc', mail: '#7a4a2a', pants: '#15151b', leather: '#3b2a1a', hair: '#111111', skin: '#b9805a', cape: '#7a1f1f', acc: '#e0b840', capeOn: true, head: 'bandana', hairStyle: 'ponytail', beard: 'goatee', face: 'eyepatch', capeTrim: true },
+  { n: 'Sacerdote Solar', tunic: '#e8e4dc', mail: '#c9a23a', pants: '#e8eef5', leather: '#8a6a44', hair: '#d8b04a', skin: '#f6d9c2', cape: '#c7a23a', acc: '#e0b840', eyes: '#c9a23a', capeOn: true, head: 'circlet', hairStyle: 'long', capeStyle: 'wide', capeTrim: true, shoulders: 'plate' },
+  { n: 'Punk das Cinzas', tunic: '#2b2b30', mail: '#3a3a46', pants: '#15151b', leather: '#111111', hair: '#2a4a7a', skin: '#e3b48f', cape: '#22222c', acc: '#a83a2a', eyes: '#a83a2a', capeOn: false, hairStyle: 'mohawk', face: 'glasses', shoulders: 'spikes' },
+  { n: 'Veterano', tunic: '#3a4a6a', mail: '#8d939b', pants: '#3a3d45', leather: '#2a2a2e', hair: '#c8c8d0', skin: '#d9a37a', cape: '#264a30', acc: '#c9b27a', eyes: '#6a3a1a', capeOn: true, hairStyle: 'short', beard: 'full', face: 'scar', shoulders: 'plate' }
 ];
+/* ---- código para compartilhar o look: AF1-<9 cores em hex>-<capa>.<cabeça>.<cabelo>.<barba>.<rosto>.<estilo da capa>.<barra>.<ombreiras> ---- */
+function skinToCode(k) { return 'AF1-' + SKIN_KEYS.map(x => k[x].slice(1)).join('') + '-' + [k.capeOn ? 1 : 0, k.head, k.hairStyle, k.beard, k.face, k.capeStyle, k.capeTrim ? 1 : 0, k.shoulders].join('.'); }
+function codeToSkin(c) {
+  const m = /^AF1-([0-9a-fA-F]{54})-([A-Za-z0-9.]+)$/.exec(String(c || '').trim()); if (!m) return null;
+  const p = m[2].split('.'); if (p.length !== 8) return null;
+  const o = {}; SKIN_KEYS.forEach((x, i) => { o[x] = '#' + m[1].slice(i * 6, i * 6 + 6); });
+  o.capeOn = p[0] === '1'; o.head = p[1]; o.hairStyle = p[2]; o.beard = p[3]; o.face = p[4]; o.capeStyle = p[5]; o.capeTrim = p[6] === '1'; o.shoulders = p[7];
+  return sanitizeSkin(o);
+}
+/* ---- looks salvos (3 vagas) ---- */
+let looks = (() => { const a = LS.get('ashenfall-looks', []); return [0, 1, 2].map(i => (a && a[i] && typeof a[i] === 'object') ? sanitizeSkin(a[i]) : null); })();
+function buildLooksUI() {
+  const box = $('skLooks'); box.innerHTML = '';
+  looks.forEach((lk, i) => {
+    const row = document.createElement('div'); row.className = 'slotr';
+    const sp = document.createElement('span'); sp.textContent = 'Look ' + (i + 1); row.appendChild(sp);
+    const dots = document.createElement('div'); dots.className = 'dots';
+    if (lk) for (const k of ['tunic', 'mail', 'pants', 'hair', 'cape']) { const d = document.createElement('i'); d.style.background = lk[k]; dots.appendChild(d); } else dots.textContent = 'vazio';
+    row.appendChild(dots);
+    const sv = document.createElement('button'); sv.className = 'mbtn sm'; sv.textContent = 'Salvar';
+    sv.addEventListener('click', () => { looks[i] = sanitizeSkin(mySkin); LS.set('ashenfall-looks', looks); buildLooksUI(); skMsg('Look ' + (i + 1) + ' salvo'); });
+    const ld = document.createElement('button'); ld.className = 'mbtn sm'; ld.textContent = 'Carregar'; ld.disabled = !lk;
+    ld.addEventListener('click', () => { if (looks[i]) { mySkin = sanitizeSkin(looks[i]); skinChanged(); skMsg('Look ' + (i + 1) + ' carregado'); } });
+    row.append(sv, ld); box.appendChild(row);
+  });
+}
+let skMsgT = 0;
+function skMsg(t, err) { const m = $('skMsg'); m.textContent = t || ''; m.className = err ? 'err' : ''; clearTimeout(skMsgT); if (t) skMsgT = setTimeout(() => { m.textContent = ''; }, 2600); }
+function skCopyText(t) {
+  const fb = () => { const i = $('skCode'); i.value = t; i.focus(); i.select(); let ok = false; try { ok = document.execCommand('copy'); } catch (e) {} skMsg(ok ? 'Código copiado' : 'Selecione e copie o código acima', !ok); };
+  try { if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t).then(() => skMsg('Código copiado'), fb); return; } } catch (e) {}
+  fb();
+}
+function showSkTab(t) {
+  skTab = t;
+  for (const b of document.querySelectorAll('#skTabs button')) b.classList.toggle('on', b.dataset.t === t);
+  for (const p of document.querySelectorAll('.skp')) p.classList.toggle('on', p.id === 'sk-' + t);
+  prev.ty = t === 'head' ? 2.0 : 1.0; prev.tz = t === 'head' ? 3.8 : 6.2; // aba "Cabeça": a prévia aproxima o rosto
+}
 function buildSkinUI() {
+  const tabs = $('skTabs');
+  for (const [t, l] of [['presets', 'Estilos'], ['colors', 'Cores'], ['head', 'Cabeça'], ['body', 'Corpo']]) { const b = document.createElement('button'); b.textContent = l; b.dataset.t = t; b.addEventListener('click', () => showSkTab(t)); tabs.appendChild(b); }
   const rows = $('skRows');
   for (const [k, label, cols] of PARTS) {
     const row = document.createElement('div'); row.className = 'swr';
@@ -2414,19 +2899,41 @@ function buildSkinUI() {
     rows.appendChild(row);
   }
   const chips = $('skPresets');
-  for (const p of PRESETS) { const b = document.createElement('button'); b.textContent = p.n; b.addEventListener('click', () => { mySkin = sanitizeSkin(p); skinChanged(); }); chips.appendChild(b); }
-  mkSeg($('skCape'), [[true, 'Ligada'], [false, 'Desligada']], () => mySkin.capeOn, v => { mySkin.capeOn = v; skinChanged(); });
-  mkSeg($('skHead'), HEADS, () => mySkin.head, v => { mySkin.head = v; skinChanged(); });
+  PRESETS.forEach((p, i) => { const b = document.createElement('button'); b.textContent = p.n; b.dataset.i = i; b.addEventListener('click', () => { mySkin = sanitizeSkin(p); skinChanged(); }); chips.appendChild(b); });
+  const seg = (id, key, list) => mkSeg($(id), list, () => mySkin[key], v => { mySkin[key] = v; skinChanged(); });
+  seg('skHair', 'hairStyle', HAIRS); seg('skBeard', 'beard', BEARDS); seg('skFace', 'face', FACES); seg('skHead', 'head', HEADS);
+  seg('skCape', 'capeOn', [[true, 'Ligada'], [false, 'Desligada']]); seg('skCapeStyle', 'capeStyle', CAPES);
+  seg('skTrim', 'capeTrim', [[false, 'Simples'], [true, 'Com barra']]); seg('skShoulders', 'shoulders', SHOULDERS);
+  buildLooksUI();
+  $('skCopy').onclick = () => skCopyText(skinToCode(mySkin));
+  $('skApply').onclick = () => { const k = codeToSkin($('skCode').value); if (!k) { skMsg('Código inválido', true); return; } mySkin = k; skinChanged(); skMsg('Look aplicado'); };
   $('skReset').onclick = () => { mySkin = sanitizeSkin(null); skinChanged(); };
+  $('skUndo').onclick = () => { if (skHist.length < 2) return; skHist.pop(); mySkin = sanitizeSkin(JSON.parse(skHist[skHist.length - 1])); skinChanged(true); };
   $('skRand').onclick = () => {
     const pick = a => a[(Math.random() * a.length) | 0], s = {};
     for (const [k, , cols] of PARTS) s[k] = pick(cols);
-    s.capeOn = Math.random() < .6; s.head = pick(HEADS)[0]; mySkin = sanitizeSkin(s); skinChanged();
+    s.capeOn = Math.random() < .6; s.head = Math.random() < .4 ? 'none' : pick(HEADS)[0]; s.hairStyle = pick(HAIRS)[0];
+    s.beard = Math.random() < .5 ? 'none' : pick(BEARDS)[0]; s.face = Math.random() < .6 ? 'none' : pick(FACES)[0];
+    s.capeStyle = pick(CAPES)[0]; s.capeTrim = Math.random() < .4; s.shoulders = Math.random() < .5 ? 'none' : pick(SHOULDERS)[0];
+    mySkin = sanitizeSkin(s); skinChanged();
   };
+  // controles da prévia
+  const pa = $('pvAuto'), twoPi = Math.PI * 2;
+  const syncAuto = () => pa.classList.toggle('on', prev.auto !== false);
+  $('pvL').onclick = () => { prev.auto = false; prev.yaw -= .6; syncAuto(); };
+  $('pvR').onclick = () => { prev.auto = false; prev.yaw += .6; syncAuto(); };
+  pa.onclick = () => { prev.auto = prev.auto === false; syncAuto(); };
+  $('pvFlip').onclick = () => { prev.auto = false; const base = Math.round(prev.yaw / twoPi) * twoPi; prev.yaw = base + (Math.cos(prev.yaw) > 0 ? Math.PI : 0); syncAuto(); };
+  showSkTab(skTab);
 }
 function refreshSkinUI() {
   for (const b of document.querySelectorAll('#skRows .sw')) b.classList.toggle('on', mySkin[b.dataset.k] === b.dataset.c);
   for (const i of document.querySelectorAll('#skRows input[type=color]')) i.value = mySkin[i.dataset.k];
+  const cur = JSON.stringify(mySkin);
+  for (const b of document.querySelectorAll('#skPresets button')) b.classList.toggle('on', JSON.stringify(sanitizeSkin(PRESETS[+b.dataset.i])) === cur);
+  const ci = $('skCode'); if (ci && document.activeElement !== ci) ci.value = skinToCode(mySkin);
+  const co = $('skCapeOpts'); if (co) co.style.opacity = mySkin.capeOn ? 1 : .45;
+  const u = $('skUndo'); if (u) u.disabled = skHist.length < 2;
   for (const r of refreshers) r();
 }
 
@@ -2461,13 +2968,14 @@ function refreshCfg() {
   for (const r of refreshers) r();
 }
 
-const PANES = ['main', 'saves', 'skin', 'multi', 'cfg'];
+const PANES = ['main', 'saves', 'skin', 'multi', 'cfg', 'acct'];
 function showPane(n) {
   for (const p of PANES) $('p-' + p).classList.toggle('on', p === n);
   menu.classList.toggle('in', n !== 'main');
   prev.on = n === 'skin';
   if (n === 'skin') { if (ensurePreview()) setLook(prev.av.m, mySkin); refreshSkinUI(); }
   if (n === 'cfg') refreshCfg();
+  if (n === 'acct') refreshAcctUI();
   if (n === 'multi') refreshMpUI();
   if (n === 'saves') renderSlots();
   $('bSaves').style.display = started ? '' : 'none';
@@ -2676,8 +3184,9 @@ function resetGame() {
   clearArrows();
   php = 100; regenT = 0; hurtT = 0; hurtFlash = 0; setSword(false); hasKey = false; quest.given = false;
   wv.state = 'idle'; wv.n = 0; wv.t = 0; wv.queue = []; wv.done = false; wv.bt = 0; waveBig.style.opacity = 0;
+  if (TEST_MODE) { hasKey = true; setSword(true); quest.given = true; wv.state = 'done'; wv.done = true; wv.n = WAVES.length; }
   for (const g of SIDE_G) { g.open = false; g.p = 0; g.cnt = 0; }
-  gateOn = false; gateP = 0; barsTop.scale.y = 1; barsTop.visible = true; moon.intensity = .6;
+  villageSeen = trailSeen = false; gateOn = false; gateP = 0; barsTop.scale.y = 1; barsTop.visible = true; moon.intensity = .6;
   msgEl.innerHTML = '🔒 PORTÃO TRANCADO<br><span>Precisa de uma chave</span>';
   attackT = 0; combo = 0; queued = 0; dive = 0; getUp = 0; vel.set(0, 0, 0); stepOff = 0;
   pos.set(0, colTop(0, 0, PR), 0); camG = pos.y; look.set(0, 1 + pos.y, 0);
@@ -2689,10 +3198,10 @@ function saveGame() {
 }
 function applySave(d) {
   resetGame();
-  hasKey = !!d.key; setSword(!!d.sword); quest.given = !!d.quest; php = clamp(Number(d.hp) || 100, 1, 100);
-  if (d.done) { wv.state = 'done'; wv.done = true; wv.n = WAVES.length; }
+  hasKey = TEST_MODE || !!d.key; setSword(TEST_MODE || !!d.sword); quest.given = TEST_MODE || !!d.quest; php = clamp(Number(d.hp) || 100, 1, 100);
+  if (d.done || TEST_MODE) { wv.state = 'done'; wv.done = true; wv.n = WAVES.length; }
   else if (d.quest) { wv.n = clamp(d.waves | 0, 0, WAVES.length - 1); wv.state = 'pause'; wv.t = 4; }
-  if (d.gate && hasKey) { gateOn = true; gateP = 1; barsTop.scale.y = .04; barsTop.visible = false; moon.intensity = 1.2; msgEl.innerHTML = '🔓 PORTÃO ABERTO<br><span>A saída leva para fora</span>'; }
+  if (d.gate && hasKey) { gateOn = true; gateP = 1; barsTop.scale.y = .04; barsTop.visible = false; moon.intensity = 1.2; msgEl.innerHTML = '🔓 PORTÃO ABERTO<br><span>Siga a trilha até a vila</span>'; }
   if (Number.isFinite(d.x) && Number.isFinite(d.z) && Math.abs(d.x) < 3000 && Math.abs(d.z) < 3000) { pos.x = d.x; pos.z = d.z; pos.y = colTop(pos.x, pos.z, PR); camG = pos.y; look.set(pos.x, 1 + pos.y, pos.z); }
 }
 function loadSlot(i) {
@@ -2714,7 +3223,7 @@ function renderSlots() {
     inf.append(b, sp); row.append(inf);
     const go = document.createElement('button'); go.className = 'mbtn sm'; go.textContent = d ? 'Continuar' : 'Novo jogo'; go.onclick = () => loadSlot(i); row.append(go);
     if (d) { const del = document.createElement('button'); del.className = 'mbtn sm sec'; del.textContent = 'Apagar';
-      del.onclick = () => { if (confirm('Apagar o save ' + (i + 1) + '?')) { try { localStorage.removeItem(slotKey(i)); } catch (e) {} if (curSlot === i) curSlot = -1; renderSlots(); } }; row.append(del); }
+      del.onclick = () => { if (confirm('Apagar o save ' + (i + 1) + '?')) { try { localStorage.removeItem(slotKey(i)); } catch (e) {} if (window.cloudDirty) window.cloudDirty(); if (curSlot === i) curSlot = -1; renderSlots(); } }; row.append(del); }
     box.append(row);
   }
 }
@@ -2726,12 +3235,136 @@ document.addEventListener('visibilitychange', () => { if (document.hidden) saveG
 $('bPlay').onclick = () => started ? startGame() : showPane('saves');
 $('bSaves').onclick = () => showPane('saves');
 $('bMulti').onclick = () => showPane('multi');
+/* ======================= CONTA (nome + senha) =======================
+   Usa o Supabase Auth com um e-mail interno gerado a partir do nome. Os dados da conta (skin, looks, configurações e saves)
+   ficam no metadado do usuário. Requer no Supabase: Authentication > Providers > Email ligado e "Confirm email" DESLIGADO. */
+const AC_DOMAIN = 'ashenfall.game', AC_KEYS = /^ashenfall-(settings|skin|looks|mute|save-\d+)$/;
+const acct = { user: null, name: '', dirtyT: 0, lastPush: 0, busy: false, status: '' };
+function acSb() {
+  if (!window.supabase || !window.supabase.createClient) return null;
+  try { mp.sb = mp.sb || window.supabase.createClient(SB_URL, SB_KEY, { realtime: { params: { eventsPerSecond: 12 } } }); } catch (e) { return null; }
+  return mp.sb;
+}
+function acMsg(t, err) { const m = $('acMsg'); m.textContent = t || ''; m.className = err ? 'err' : ''; }
+function acErr(e) {
+  const m = String((e && e.message) || e || '').toLowerCase();
+  if (m.includes('already') || m.includes('registered')) return 'Esse nome já está em uso.';
+  if (m.includes('invalid login') || m.includes('invalid credentials')) return 'Nome ou senha incorretos.';
+  if (m.includes('confirm')) return 'A confirmação de e-mail está ligada no Supabase. Desligue "Confirm email" para usar contas por nome.';
+  if (m.includes('rate') || m.includes('too many')) return 'Muitas tentativas. Aguarde um pouco.';
+  if (m.includes('password')) return 'Senha inválida (mínimo 6 caracteres).';
+  if (m.includes('signups not allowed') || m.includes('disabled')) return 'Criação de contas desativada no Supabase.';
+  if (m.includes('email') && m.includes('invalid')) return 'O Supabase recusou o e-mail interno. Ajuste AC_DOMAIN no código.';
+  if (m.includes('fetch') || m.includes('network')) return 'Sem conexão com o servidor.';
+  return 'Não foi possível concluir. Tente de novo.';
+}
+const acEmail = n => n.toLowerCase() + '@' + AC_DOMAIN;
+function acCheck(name, pass) {
+  if (!/^[A-Za-z0-9_]{3,14}$/.test(name)) return 'Nome: 3 a 14 caracteres (letras, números ou _).';
+  if (String(pass).length < 6) return 'A senha precisa ter ao menos 6 caracteres.';
+  return '';
+}
+function acSnapshot() { // dados locais que pertencem à conta
+  const d = {};
+  try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (AC_KEYS.test(k)) d[k] = localStorage.getItem(k); } } catch (e) {}
+  return d;
+}
+function acLocalTs() { try { return Number(localStorage.getItem('ashenfall-ts')) || 0; } catch (e) { return 0; } }
+function acApply(af) { // a nuvem vence: troca os dados locais e recarrega o jogo
+  try {
+    const rm = []; for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (AC_KEYS.test(k)) rm.push(k); }
+    rm.forEach(k => localStorage.removeItem(k));
+    for (const k of Object.keys(af.d || {})) if (AC_KEYS.test(k) && typeof af.d[k] === 'string') localStorage.setItem(k, af.d[k]);
+    localStorage.setItem('ashenfall-ts', String(af.ts || Date.now()));
+  } catch (e) {}
+  window.cloudDirty = null; location.reload();
+}
+async function acPush(force) {
+  const sb = acSb(); if (!sb || !acct.user || acct.busy) return false;
+  acct.busy = true; clearTimeout(acct.dirtyT); acct.dirtyT = 0;
+  try {
+    const ts = Date.now(), d = acSnapshot();
+    const r = await sb.auth.updateUser({ data: { af: { ts, d } } });
+    if (r.error) throw r.error;
+    try { localStorage.setItem('ashenfall-ts', String(ts)); } catch (e) {}
+    acct.lastPush = ts; acct.status = 'Salvo na conta às ' + new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return true;
+  } catch (e) { acct.status = 'Falha ao salvar na conta. Tentaremos de novo.'; return false; }
+  finally { acct.busy = false; if ($('p-acct').classList.contains('on')) refreshAcctUI(); }
+}
+window.cloudDirty = function (k) { // o autosave do jogo (a cada 5 s) é espaçado para não sobrecarregar o servidor
+  if (!acct.user) return;
+  const slow = /save-/.test(String(k || '')), wait = Math.max(slow ? 20000 : 2500, (slow ? 60000 : 10000) - (Date.now() - acct.lastPush));
+  if (acct.dirtyT && slow) return;
+  clearTimeout(acct.dirtyT); acct.dirtyT = setTimeout(acPush, wait);
+};
+document.addEventListener('visibilitychange', () => { if (document.hidden && acct.dirtyT) acPush(); });
+function acSetUser(u) {
+  acct.user = u || null;
+  acct.name = u ? String((u.user_metadata && u.user_metadata.name) || (u.email || '').split('@')[0]) : '';
+  $('bAcct').textContent = u ? 'Conta: ' + acct.name : 'Conta';
+}
+function refreshAcctUI() {
+  const on = !!acct.user;
+  $('acOff').style.display = on ? 'none' : ''; $('acOn').style.display = on ? '' : 'none';
+  if (on) { $('acWho').textContent = acct.name; $('acSync').textContent = acct.status || 'Seus dados são salvos automaticamente na conta.'; }
+}
+function acBusy(b) { for (const id of ['acLogin', 'acCreate', 'acSyncNow', 'acOut']) $(id).disabled = b; }
+async function acEnter(create) {
+  const name = $('acName').value.trim(), pass = $('acPass').value, bad = acCheck(name, pass);
+  if (bad) { acMsg(bad, true); return; }
+  const sb = acSb(); if (!sb) { acMsg('Não foi possível carregar o Supabase. Verifique sua conexão.', true); return; }
+  acBusy(true); acMsg(create ? 'Criando conta…' : 'Entrando…');
+  try {
+    if (create) {
+      const snap = { ts: Date.now(), d: acSnapshot() };
+      const r = await sb.auth.signUp({ email: acEmail(name), password: pass, options: { data: { name, af: snap } } });
+      if (r.error) throw r.error;
+      if (!r.data.session) throw new Error('confirm');
+      try { localStorage.setItem('ashenfall-ts', String(snap.ts)); } catch (e) {}
+      acSetUser(r.data.user); acct.status = 'Conta criada. Seus dados atuais foram salvos nela.';
+      $('acPass').value = ''; acMsg('Conta criada!'); refreshAcctUI();
+    } else {
+      const r = await sb.auth.signInWithPassword({ email: acEmail(name), password: pass });
+      if (r.error) throw r.error;
+      acSetUser(r.data.user); $('acPass').value = '';
+      const af = r.data.user.user_metadata && r.data.user.user_metadata.af;
+      if (af && af.d && Object.keys(af.d).length) { acMsg('Carregando seus dados…'); acApply(af); return; }
+      await acPush(true); acMsg('Conectado!'); refreshAcctUI();
+    }
+  } catch (e) { acMsg(acErr(e), true); }
+  acBusy(false);
+}
+async function initAccount() {
+  $('acLogin').onclick = () => acEnter(false); $('acCreate').onclick = () => acEnter(true);
+  $('acPass').addEventListener('keydown', e => { if (e.key === 'Enter') acEnter(false); });
+  $('bAcct').onclick = () => showPane('acct');
+  $('acSyncNow').onclick = async () => { acBusy(true); acMsg('Salvando…'); const ok = await acPush(true); acMsg(ok ? 'Dados salvos na conta.' : 'Falha ao salvar.', !ok); acBusy(false); };
+  $('acOut').onclick = async () => {
+    acBusy(true); if (acct.dirtyT) await acPush(true);
+    try { const sb = acSb(); if (sb) await sb.auth.signOut(); } catch (e) {}
+    acSetUser(null); acct.status = ''; acMsg('Você saiu da conta. Os dados deste aparelho continuam aqui.'); refreshAcctUI(); acBusy(false);
+  };
+  const sb = acSb(); if (!sb) return;
+  try {
+    const g = await sb.auth.getSession();
+    if (g.data && g.data.session) {
+      acSetUser(g.data.session.user);
+      const u = await sb.auth.getUser(); // dados frescos do servidor
+      if (u.data && u.data.user) {
+        acSetUser(u.data.user);
+        const af = u.data.user.user_metadata && u.data.user.user_metadata.af;
+        if (af && af.ts > acLocalTs() && af.d) { acApply(af); return; }
+      } else if (u.error && /jwt|session|token|user/i.test(String(u.error.message))) acSetUser(null);
+    }
+  } catch (e) {}
+}
 $('bSkin').onclick = () => showPane('skin');
 $('bCfg').onclick = () => showPane('cfg');
 for (const b of document.querySelectorAll('[data-back]')) b.onclick = () => showPane('main');
 applySettings(); setIso(settings.cam !== '3p');
 setLook(hero, mySkin);
-buildSkinUI(); buildCfgUI(); buildMpUI();
+buildSkinUI(); buildCfgUI(); buildMpUI(); initAccount();
 showPane('main');
 { const c = (new URLSearchParams(location.search).get('sala') || '').toUpperCase().split('').filter(x => MP_ALPHA.includes(x)).join('').slice(0, 5); if (c.length === 5) { $('mpCode').value = c; showPane('multi'); } }
 
